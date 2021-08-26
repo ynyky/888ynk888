@@ -1,0 +1,14 @@
+{% extends 'based.html' %}
+
+{% block body %}
+
+<h2>{{ the_title }}</h2>
+<from method="POST" action='/search4'>
+    <table>
+        <p>Uzyj tego formualrza:</p>
+        <tr><td>Fraza:</td><td><input name='phrase' type="TEXT" width="60"></td></tr>
+        <tr><td>Litery:</td><td><input name='letters' type="TEXT" value="aeiou"></td></tr>
+    </table>
+    <p>Gdy bedziesz gotow klinij przycisk</p>
+    
+</from>
