@@ -10,7 +10,7 @@ def hello() -> str:
    return 'Witaj, świecie, tu Flask!'
 
 
-@app.route('/search4')
+@app.route('/search4', methods=['POST'])
 def do_search() -> str:
    return str(search4letters('życie, wszechświat i cała reszta', 'eiru,!'))
 
