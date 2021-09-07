@@ -1,0 +1,49 @@
+
+
+
+MariaDB [(none)]> grant all on vsearchlogDB.* to 'vsearch' identified by 'vsearchpasswdd';
+
+>>> import mysql.connector
+>>> dbconfig = { 'host': '127.0.0.1',
+...              'user': 'vsearch',
+...              'password': 'vsearchpasswdd',
+...              'database': 'vsearchlogDB', }
+>>>
+>>> conn = mysql.connector.connect(**dbconfig)
+>>> cursor = conn.cursor()
+>>> _SQL = """show tables"""
+>>> cursor.execute(_SQL)
+>>> res = cursor.fetchall()
+>>> res
+
+>>> _SQL = """describe log"""
+>>> cursor.execute(_SQL)
+>>> res = cursor.fetchaall()
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+AttributeError: 'MySQLCursor' object has no attribute 'fetchaall'
+>>> res = cursor.fetchall()
+>>> res = cursor.fetchall()
+
+>>> for row in res:
+...     print(row)
+...
+>>> _SQL = """insert into log
+...             (phrase, letters, ip, browser_string, results)
+...             values
+...             ('mierni', 'aeiou', '127.0.0.1', 'FireFox', "{'e', 'i'}")"""
+>>> cursor.execute(_SQL)
+>>> cursor.execute(_SQL)
+>>> _SQL = """insert into log
+...             (phrase, letters, ip, browser_string, results)
+...             values
+...             (%s, %s, %s, %s, %s)"""
+>>> cursor.execute(_SQL, ('mierni', 'xyz', '127.0.0.1', 'Safari', 'set()'))
+>>> conn.commit()
+>>> _SQL = """select * from log"""
+>>> cursor.execute(_SQL)
+>>> for row in cursor.fetchall():
+... print(row)
+>>> cursor.close()
+True
+>>> conn.close()

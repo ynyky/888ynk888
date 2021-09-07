@@ -2,7 +2,10 @@
 from flask import Flask, render_template, request, escape
 from vsearch import search4letters
 
-from DBcm import UseDatabase
+from DBcm import UseDatabase, ConnectionError, CredentialsError, SQLError
+from checker import check_logged_in
+
+from time import sleep
 
 app = Flask(__name__)
 
@@ -12,8 +15,25 @@ app.config['dbconfig'] = {'host': '127.0.0.1',
                           'database': 'vsearchlogDB', }
 
 
+@app.route('/login')
+def do_login() -> str:
+   session['logged_in'] = True
+   return 'Teraz jesteś zalogowany.'
+
+
+@app.route('/logout')
+def do_logout() -> str:
+   session.pop('logged_in')
+   return 'Teraz jesteś wylogowany.'
+
+
 def log_request(req: 'flask_request', res: str) -> None:
    """Loguje szczegóły żądania sieciowego oraz wyniki."""
+
+   # raise Exception("Właśnie stało się coś okropnego.")
+
+   sleep(15)  # To powoduje, że funkcja log_request działa naprawdę powoli...
+
    with UseDatabase(app.config['dbconfig']) as cursor:
       _SQL = """insert into log
                 (phrase, letters, ip, browser_string, results)
@@ -33,7 +53,10 @@ def do_search() -> 'html':
    letters = request.form['letters']
    title = 'Oto Twoje wyniki:'
    results = str(search4letters(phrase, letters))
-   log_request(request, results)
+   try:
+      log_request(request, results)
+   except Exception as err:
+      print('***** Logowanie się nie powiodło; wystąpił błąd:', str(err))
    return render_template('results.html',
                           the_title=title,
                           the_phrase=phrase,
@@ -50,19 +73,33 @@ def entry_page() -> 'html':
 
 
 @app.route('/viewlog')
+@check_logged_in
 def view_the_log() -> 'html':
    """Wyświetla zawartość pliku logu w tabeli HTML."""
-   with UseDatabase(app.config['dbconfig']) as cursor:
-      _SQL = """select phrase, letters, ip, browser_string, results
-                from log"""
-      cursor.execute(_SQL)
-      contents = cursor.fetchall()
-   titles = ('Fraza', 'Adres klienta', 'Agent użytkownika', 'Wyniki')
-   return render_template('viewlog.html',
-                          the_title='Widok logu',
-                          the_row_titles=titles,
-                          the_data=contents,)
+   try:
+      with UseDatabase(app.config['dbconfig']) as cursor:
+         _SQL = """select phrase, letters, ip, browser_string, results
+                   from logerror"""
+         cursor.execute(_SQL)
+         contents = cursor.fetchall()
+      # raise Exception("Jakiś nieznany wyjątek.")
+      titles = ('Fraza' , 'Litery' , 'Adres klienta', 'Agent użytkownika', 'Wyniki')
+      return render_template('viewlog.html',
+                             the_title='View Log',
+                             the_row_titles=titles,
+                             the_data=contents,)
+   except ConnectionError as err:
+      print('Czy Twoja baza danych jest włączona? Błąd:', str(err))
+   except CredentialsError as err:
+      print('Problemy z identyfikatorem użytkownika lub hasłem dostępu. Błąd:', str(err))
+   except SQLError as err:
+      print('Czy Twoje zapytanie jest poprawne? Błąd:', str(err))
+   except Exception as err:
+      print('Coś poszło źle:', str(err))
+   return 'Błąd'
 
+   
+app.secret_key = 'NigdyNieZgadnieszMojegoTajnegoKlucza'
 
 if __name__ == '__main__':
-   app.run(debug=True)
+    app.run(debug=True)

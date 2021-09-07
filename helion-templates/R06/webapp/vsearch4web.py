@@ -1,29 +1,14 @@
-﻿
+
 from flask import Flask, render_template, request, escape
 from vsearch import search4letters
 
-from DBcm import UseDatabase
-
 app = Flask(__name__)
-
-app.config['dbconfig'] = {'host': '127.0.0.1',
-                          'user': 'vsearch',
-                          'password': 'vsearchpasswd',
-                          'database': 'vsearchlogDB', }
 
 
 def log_request(req: 'flask_request', res: str) -> None:
    """Loguje szczegóły żądania sieciowego oraz wyniki."""
-   with UseDatabase(app.config['dbconfig']) as cursor:
-      _SQL = """insert into log
-                (phrase, letters, ip, browser_string, results)
-                values
-                (%s, %s, %s, %s, %s)"""
-      cursor.execute(_SQL, (req.form['phrase'],
-                            req.form['letters'],
-                            req.remote_addr,
-                            req.user_agent.browser,
-                            res, ))
+   with open('vsearch.log', 'a') as log:
+      print(req.form, req.remote_addr, req.user_agent, res, file=log, sep='|')
 
 
 @app.route('/search4', methods=['POST'])
@@ -52,12 +37,13 @@ def entry_page() -> 'html':
 @app.route('/viewlog')
 def view_the_log() -> 'html':
    """Wyświetla zawartość pliku logu w tabeli HTML."""
-   with UseDatabase(app.config['dbconfig']) as cursor:
-      _SQL = """select phrase, letters, ip, browser_string, results
-                from log"""
-      cursor.execute(_SQL)
-      contents = cursor.fetchall()
-   titles = ('Fraza', 'Adres klienta', 'Agent użytkownika', 'Wyniki')
+   contents = []
+   with open('vsearch.log') as log:
+      for line in log:
+         contents.append([])
+         for item in line.split('|'):
+            contents[-1].append(escape(item))
+   titles = ('Dane z formularza', 'Adres klienta', 'Agent użytkownika', 'Wyniki')
    return render_template('viewlog.html',
                           the_title='Widok logu',
                           the_row_titles=titles,
