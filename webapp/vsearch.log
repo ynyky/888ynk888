@@ -1,5 +1,2 @@
-<Request 'http://localhost:5000/search4' [POST]> set()
-<Request 'http://localhost:5000/search4' [POST]> {'a'}
-<Request 'http://localhost:5000/search4' [POST]> {'a'}
-<Request 'http://localhost:5000/search4' [POST]> {'a', 'e'}
-<Request 'http://localhost:5000/search4' [POST]> {'a'}
+
+ImmutableMultiDict([('phrase', 'szczepannn'), ('letters', 'aeiou')])|127.0.0.1|Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36|{'e', 'a'}
