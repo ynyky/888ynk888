@@ -1,5 +1,4 @@
-﻿
-from flask import Flask, render_template, request, escape
+﻿from flask import Flask, render_template, request, escape
 from vsearch import search4letters
 
 from DBcm import UseDatabase
