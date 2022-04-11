@@ -1,0 +1,25 @@
+## create
+gcloud compute instances create nucleus-jumphost --machine-type f1-micro --zone us-east1-b
+## SSH
+gcloud compute ssh gcelab2 --zone us-central1-f
+us-east1-b
+## 
+export ZONE=
+echo $PROJECT_ID
+
+gcloud compute instances list
+
+## DEFAULT COMPTUE/ZONE
+ gcloud config set compute/zone $ZONE
+
+## CHECK DEFAULT
+gcloud compute project-info describe --project qwiklabs-gcp-01-589d486d4eb5
+
+## set project 
+gcloud config set project [PROJECT_ID]
+
+
+
+
+
+

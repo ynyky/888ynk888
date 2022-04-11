@@ -1,0 +1,61 @@
+class ci_zajetosc
+{
+  public String key
+  public int value
+}
+LinkedHashMap<ci_zajetosc>items = [
+   'CI6': 3,
+   'CI7': 5,
+   'CI8': 10,
+   'CI9': 0
+]
+
+for (ci in items){
+	if (items.value < 1)
+  		println 'znaleziony'
+  	else
+      	println 'dupa'
+}
+//struct ci_zajetosc { key; value}
+//lista items
+//for ci in cis
+//  if (ci.zajetosc < zajetosci.first.wartosc)
+//    zajetosci.push_first({ci, ci.zajetosc})
+//
+//najmniejzajetyci = zajetosci.first.ci
+println items
+
+####
+import org.jenkins.plugins.lockableresources.LockableResource
+import org.jenkins.plugins.lockableresources.LockableResourcesManager
+def lrmWithoutSerialization(){
+  return LockableResourcesManager.get()
+}
+
+class ci_zajetosc
+{
+  public String key
+  public int value
+}
+LinkedHashMap<ci_zajetosc>items = [
+   'CI6': 3,
+   'CI7': 5,
+   'CI8': 10,
+   'CI9': 0
+]
+busy == 0
+resources_list = lrmWithoutSerialization().getResourcesWithLabel("CI_TEST", null)
+resources_list.each({i ->
+  busy ++
+  String resource = i
+  String resource_env = resource.split('_')[0]
+  boolean is_reserved = lrmWithoutSerialization().fromName(resource).isReserved()
+  println resource
+  	if (is_reserved == false && busy == items.value){
+  		println 'wybrany'
+    }
+    if (busy == 10) {
+      sleep 10
+    }
+})
+println items

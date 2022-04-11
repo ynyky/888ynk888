@@ -1,0 +1,8 @@
+#!/usr/bin/env python3
+import xml.etree.ElementTree as ET
+tree = ET.parse('coverage.xml')
+root = tree.getroot()
+success = int(root.attrib['branches-covered'])
+total = int(root.attrib['branches-valid'])
+coverage = (success / total)
+print("%.0f%%" % (100 * success/total))

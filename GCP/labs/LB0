@@ -1,0 +1,17 @@
+#!/bin/bash
+## create multiple websterver
+gcloud compute instances create www2 \
+  --image-family debian-9 \
+  --image-project debian-cloud \
+  --zone us-east1-b \
+  --tags network-lb-tag \
+  --metadata startup-script="#! /bin/bash
+    sudo apt-get update
+    sudo apt-get install apache2 -y
+    sudo service apache2 restart
+    echo '<!doctype html><html><body><h1>www1</h1></body></html>' | tee /var/www/html/index.html"
+
+
+## FIREWALL RULE
+gcloud compute firewall-rules create www-firewall-network-lb \
+    --target-tags network-lb-tag --allow tcp:80

@@ -1,0 +1,6 @@
+---
+- name: Run static check
+  command:
+   chdir: '{{ smartnic_test_dir }}'
+    cmd: >-
+      {{ smartnic_test_python_env_path }}/bin/tox 

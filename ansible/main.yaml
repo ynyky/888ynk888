@@ -1,0 +1,9 @@
+- name: test
+  hosts: localhost
+  become: true
+  #  vars:
+  #   oras_enabled: yes
+  roles:
+          #  - testpmd
+    - ius
+

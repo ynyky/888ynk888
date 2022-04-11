@@ -1,0 +1,10 @@
+if [ "${DPDK_UIO_DRIVER}" == "n3000" ]; then
+    for i in {1..300} ; do
+        echo "Waiting for n3000-init container to finish...($i/300)"
+        [ -f ${binding_data_dir}/n3000/args ] && break;
+        if (( i == 300 )) ; then
+            echo "Time for n3000-init container to finish exceeded."
+            exit -1
+        fi
+        sleep 1
+    done

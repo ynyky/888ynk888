@@ -1,0 +1,37 @@
+- name: 'Create folder for testpmd'
+  file:
+    path: "/home/michal/github/ansible/testpmd-dir"
+    state: directory
+    mode: 0755
+
+- name: 'Download oras binary'
+  get_url:
+    url: 'http://10.7.0.200/oras/oras'
+    dest: '/home/michal/github/ansible'
+    mode: '0755'
+    owner: 'michal'
+    group: 'michal'
+  when: oras_enabled
+
+- name: 'Download pre-built vm_mx testpmd binary'
+  shell: >
+    oras pull harbor.smartnic.codilime.com/tungstenfabric/testpmd:latest -a
+  when: oras_enabled
+
+- name: "Copy testpmd to testpmd-dir"
+  copy:
+    src: ./testpmd
+    dest: '/home/michal/github/ansible/testpmd-dir/testpmd'
+    owner: 'michal'
+    group: 'michal'
+    mode: '0777'
+  when: oras_enabled
+
+- name: 'Download pre-built vm_mx testpmd binary'
+  get_url:
+    url: 'http://10.7.0.200/testpmd/latest'
+    dest: '/home/michal/github/ansible/latest'
+    mode: '0777'
+    owner: 'michal'
+    group: 'michal'
+  when: not oras_enabled

@@ -1,0 +1,27 @@
+        stage("Checkout vcsr-linux repo") {
+            steps {
+                checkout changelog: false, poll: false,
+                scm: [$class: 'GitSCM',
+                branches: [[name: params.VCSR_LINUX_BRANCH]],
+                browser: [$class: 'GithubWeb', repoUrl: ''],
+                doGenerateSubmoduleConfigurations: false,
+                extensions: [
+                    [$class: 'SubmoduleOption',
+                    disableSubmodules: true,
+                    parentCredentials: false,
+                    recursiveSubmodules: false,
+                    reference: '',
+                    trackingSubmodules: false
+                    ],
+                    [$class: 'RelativeTargetDirectory', relativeTargetDir: 'vcsr-linux']
+                ],
+                submoduleCfg: [],
+                userRemoteConfigs: [
+                    [
+                    credentialsId: repo_credentials_id,
+                    url: repo_vcsr_linux_url
+                    ]
+                ]
+                ]
+            }
+        }

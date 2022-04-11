@@ -1,0 +1,14 @@
+while [ $# -gt 0 ]; do
+  case "$1" in
+    download) download; exit;;
+    run_devstack_install) run_devstack_install; exit;;
+    run_synthesis_install) run_synthesis_install; exit;;
+    copy_p4c_bsp_to_bin) copy_p4c_bsp_to_bin; exit;;
+    run_boost_install) run_boost_install; exit;;
+    all) all; exit;;
+    download) download; exit;;
+    install) install; exit;;
+    cleanup) cleanup; exit;;
+  esac
+  shift
+done

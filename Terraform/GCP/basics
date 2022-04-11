@@ -1,0 +1,18 @@
+# Update Terraform
+# The example code you will use in this lab requires Terraform versions 0.13.0 and higher.
+
+# First, ensure you are using a sufficient version of Terraform by downloading 0.13.0.
+
+wget https://releases.hashicorp.com/terraform/0.13.0/terraform_0.13.0_linux_amd64.zip
+# Copied!
+# Unzip the downloaded executable:
+
+unzip terraform_0.13.0_linux_amd64.zip 
+# Copied!
+# Move the executable into your local bin folder:
+
+sudo mv terraform /usr/local/bin/
+# Copied!
+# Run this command to ensure your Terraform version is 0.13.0:
+
+terraform -v

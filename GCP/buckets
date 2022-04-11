@@ -1,0 +1,16 @@
+##Create bucket
+gsutil mb gs://BUCKET_NAME
+
+## copy on bucket
+gsutil cp xxx.jpg gs://YOUR-BUCKET-NAME
+gsutil cp -r xxx.jpg gs://YOUR-BUCKET-NAME
+#create folder
+gsutil cp gs://YOUR-BUCKET-NAME/xxx.jpg gs://YOUR-BUCKET-NAME/image-folder/
+##ls
+gsutil ls gs://YOUR-BUCKET-NAME
+##
+gsutil rm gs://YOUR-BUCKET-NAME/xxx.jpg
+##permission give
+gsutil acl ch -u AllUsers:R gs://YOUR-BUCKET-NAME/xxx.jpg
+##permission delete
+gsutil acl ch -d AllUsers gs://YOUR-BUCKET-NAME/xxx.jpg

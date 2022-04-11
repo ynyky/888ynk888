@@ -1,0 +1,25 @@
+- name: Install IUS Community dependency
+  yum:
+    name: epel-release
+    state: present
+  register: result
+  until: result is success
+  retries: 10
+
+- name: Install IUS Community repository
+  yum:
+    name: https://repo.ius.io/ius-release-el7.rpm
+    state: present
+  register: result
+  until: result is success
+  retries: 10
+
+- name: Install required packages for tests
+  yum:
+    name:
+      - python36u
+      - tcpdump
+    state: present
+  register: result
+  until: result is success
+  retries: 10

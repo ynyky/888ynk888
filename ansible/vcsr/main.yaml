@@ -1,0 +1,16 @@
+- name: test
+  hosts: localhost
+  become: true
+  tasks:
+    - name: Creates directory
+      file:
+        path: /home/ubuntu/vcsr
+        state: directory
+    - name: Read-write git checkout from github
+      ansible.builtin.git:
+        repo: git@github.com:codilime/vcsr-scripts.git
+        dest: /home/ubuntu/vcsr/
+    - name: Read-write git checkout from github
+      ansible.builtin.git:
+        repo: git clone git@github.com:codilime/vcsr-linux.git
+        dest: /home/ubuntu/vcsr/

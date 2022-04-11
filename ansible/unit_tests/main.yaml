@@ -1,0 +1,8 @@
+- name: test
+  hosts: localhost
+  become: true
+  tasks:
+    - name: Run static checks
+      import_tasks: static_check.yml
+      when: smartnic_static_check is defined and smartnic_static_check|bool      
+

@@ -1,0 +1,21 @@
+      for (int i = 1; i < passed_builds.size(); ++i) {
+        copyArtifacts(projectName: passed_builds[i], optional: true, selector: lastCompleted(), target: passed_builds[i]);
+        passed_description = ""
+        switch (passed_builds[i]) {
+            case "vcsr/execute-vcsr-agent-unit-tests":
+                coverage_path="./vcsr/execute-vcsr-agent-unit-tests/vcsr-agent/builddir/meson-logs/coverage.txt"
+                passed_description = "coverage: " + sh (script: 'grep "TOTAL" $coverage_path | awk \'{print $3}\'', returnStdout: true).trim() + '/' +  sh (script: 'grep "TOTAL" $coverage_path | awk \'{print $2}\'', returnStdout: true).trim() +' '+ sh (script: 'grep "TOTAL" $coverage_path | awk \'{print $4}\'', returnStdout: true).trim()
+                break
+            case "vcsr/vcsr-ptf-execute-tests":
+                coverage_path="./vcsr/vcsr-ptf-execute-tests/ptf_logs/ptf-report.txt"
+                passed_description = "coverage: " + sh (script: 'cat $coverage_path |tail -1', returnStdout: true).trim()
+                break
+            case "vcsr/build-vcsr-kernel":
+                passed_description = ":+1:"
+                break
+            default:
+                passed_description = ""
+                break
+        }
+        passed_message = passed_builds[i] + " -> " + passed_description + "\n" + passed_message
+      }
