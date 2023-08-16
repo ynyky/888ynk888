@@ -1,0 +1,3 @@
+---
+docker_pull_images:
+  - "p4lang/p4app:latest"

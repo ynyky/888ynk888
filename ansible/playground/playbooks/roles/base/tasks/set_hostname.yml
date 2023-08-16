@@ -1,0 +1,6 @@
+---
+- name: Set machine hostname to value from playbook
+  copy:
+    content: "{{ inventory_hostname }}"
+    dest: /etc/hostname
+    mode: 0644

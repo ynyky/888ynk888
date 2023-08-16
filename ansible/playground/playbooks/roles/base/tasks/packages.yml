@@ -1,0 +1,62 @@
+---
+- name: Install RH packages
+  block:
+    - name: Install packages
+      yum:
+        name:
+          - htop
+          - jq
+          - qemu-kvm
+          - libvirt-daemon-system
+          - python3-libvirt
+          - python3-lxml
+        state: present
+
+    - name: Add ius repo
+      yum:
+        name: https://repo.ius.io/ius-release-el7.rpm
+        state: present
+      register: result
+      until: result is success
+      retries: 10
+
+    - name: Disable ius repo
+      command: yum-config-manager --disable ius
+
+    - name: Remove git confflicts
+      yum:
+        name: "git < 2.0"
+        state: absent
+        autoremove: yes
+      register: result
+      until: result is success
+      retries: 10
+
+    - name: Ensure newer git is installed
+      yum:
+        name: "git > 2.0"
+        enablerepo: ius
+        state: present
+      register: result
+      until: result is success
+      retries: 10
+  when: ansible_facts['os_family'] == "RedHat"
+
+- name: Run the equivalent of "apt-get update"
+  ansible.builtin.apt:
+    update_cache: yes
+- name: Install debian packages
+  apt:
+    name:
+      - htop
+      - git
+      - jq
+      - nfs-kernel-server
+      - vagrant
+      - qemu-kvm
+      - libvirt-daemon-system
+      - libvirt-dev
+    state: present
+  when: ansible_facts['os_family'] == "Debian"
+
+

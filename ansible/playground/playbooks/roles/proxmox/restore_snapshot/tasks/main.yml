@@ -1,0 +1,123 @@
+---
+
+# proxmox_kvm doesn't support snapshot management so we have to do it via API
+
+- name: Restoration block
+  vars:
+    max_retries: 5
+    retry_delay: 10
+  block:
+    - name: Increment the retry count
+      set_fact:
+        retry_count: "{{ 0 if retry_count is undefined else retry_count | int + 1 }}"
+
+    # Auth
+    - name: Get ticket
+      uri:
+        url: "https://{{ proxmox_api_host }}:8006/api2/json/access/ticket"
+        method: POST
+        body_format: form-urlencoded
+        body:
+          username: "{{ proxmox_username }}"
+          password: "{{ proxmox_user_password }}"
+        validate_certs: no
+      register: auth
+      delegate_to: localhost
+
+    - name: Stop vm
+      proxmox_kvm:
+        api_host: "{{ proxmox_api_host }}"
+        api_user: "{{ proxmox_username }}"
+        api_password: "{{ proxmox_user_password }}"
+        name: "{{ proxmox_vm_name }}"
+        state: stopped
+        validate_certs: no
+      delegate_to: localhost
+
+    - name: Rollback to snapshot
+      uri:
+        url: "https://{{ proxmox_api_host }}:8006/api2/json/nodes/{{ vm_proxmox_node }}\
+              /qemu/{{ vm_vmid }}/snapshot/{{ proxmox_snapshot_name }}/rollback"
+        method: POST
+        headers:
+          Cookie: "PVEAuthCookie={{ auth.json.data.ticket }}"
+          CSRFPreventionToken: "{{ auth.json.data.CSRFPreventionToken }}"
+        validate_certs: no
+      delegate_to: localhost
+
+    - name: Wait for lock
+      uri:
+        url: "https://{{ proxmox_api_host }}:8006/api2/json/nodes/{{ vm_proxmox_node }}/qemu/{{ vm_vmid }}/status/current"
+        method: GET
+        headers:
+          Cookie: "PVEAuthCookie={{ auth.json.data.ticket }}"
+          CSRFPreventionToken: "{{ auth.json.data.CSRFPreventionToken }}"
+        validate_certs: no
+      changed_when: false
+      register: machine_status
+      retries: 10
+      delay: 60
+      until: machine_status.json.data.lock is not defined
+      delegate_to: localhost
+
+    - name: Wait for vm status stopped
+      uri:
+        url: https://{{ proxmox_api_host }}:8006/api2/json/nodes/{{ vm_proxmox_node }}/qemu/{{ vm_vmid }}/status/current
+        method: GET
+        headers:
+          Cookie: "PVEAuthCookie={{ auth.json.data.ticket }}"
+          CSRFPreventionToken: "{{ auth.json.data.CSRFPreventionToken }}"
+        validate_certs: no
+      changed_when: false
+      register: machine_status
+      retries: 10
+      delay: 60
+      until: '"stopped" in machine_status.json.data.status'
+      delegate_to: localhost
+
+    - name: Start VM
+      uri:
+        url: "https://{{ proxmox_api_host }}:8006/api2/json/nodes/{{ vm_proxmox_node }}/qemu/{{ vm_vmid }}/status/start"
+        method: POST
+        headers:
+          Cookie: "PVEAuthCookie={{ auth.json.data.ticket }}"
+          CSRFPreventionToken: "{{ auth.json.data.CSRFPreventionToken }}"
+        validate_certs: no
+      delegate_to: localhost
+
+    - name: Wait for vm status running
+      uri:
+        url: "https://{{ proxmox_api_host }}:8006/api2/json/nodes/{{ vm_proxmox_node }}/qemu/{{ vm_vmid }}/status/current"
+        method: GET
+        headers:
+          Cookie: "PVEAuthCookie={{ auth.json.data.ticket }}"
+          CSRFPreventionToken: "{{ auth.json.data.CSRFPreventionToken }}"
+        validate_certs: no
+      changed_when: false
+      register: machine_status
+      retries: 10
+      delay: 60
+      until: '"running" in machine_status.json.data.status'
+      delegate_to: localhost
+
+    - name: Wait for vm to be accessible
+      wait_for_connection:
+        delay: 30
+        timeout: 300
+
+  rescue:
+    - name: Fail when max retries reached
+      fail:
+        msg: Maximum retries of proxmox snapshot restore reached
+      when: retry_count | int == max_retries | int
+
+    - name: Print info msg
+      debug:
+        msg: "[INFO] Proxmox snapshot restore failed RETRYING"
+
+    - name: Sleep between retries
+      wait_for:
+        timeout: "{{ retry_delay }}"
+      delegate_to: localhost
+
+    - include_tasks: snapshot.yml

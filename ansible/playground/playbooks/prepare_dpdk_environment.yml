@@ -1,0 +1,17 @@
+---
+- name: Restore base snapshot for vm
+  hosts: vm
+  ignore_unreachable: true
+  ignore_errors: true
+  gather_facts: no
+  roles:
+    - proxmox/restore_snapshot
+  vars:
+    proxmox_snapshot_name: "dpdk_introduction_new"
+
+- name: Prepare vs_code
+  hosts: vm
+  become: true
+  roles:
+    - setup_vs_code
+

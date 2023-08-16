@@ -1,0 +1,26 @@
+
+---
+- name: set hostname
+  import_role:
+    name: base
+    tasks_from: set_hostname
+
+- name: install docker
+  import_role:
+    name: base
+    tasks_from: docker
+
+- name: install packages
+  import_role:
+    name: base
+    tasks_from: packages
+
+- name: playground user
+  import_role:
+    name: base
+    tasks_from: playground_user
+
+- name: Prepare mgmt VM
+  import_role:
+    name: vagrant
+

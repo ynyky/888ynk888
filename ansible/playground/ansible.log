@@ -1,0 +1,433 @@
+2022-09-29 16:26:50,453 p=79422 u=michal n=ansible | [DEPRECATION WARNING]: ALLOW_WORLD_READABLE_TMPFILES option, moved to a per plugin approach that is more flexible, use mostly the 
+same config will work, but now controlled from the plugin itself and not using the general constant. instead. This feature will be 
+removed from ansible-base in version 2.14. Deprecation warnings can be disabled by setting deprecation_warnings=False in ansible.cfg.
+2022-09-29 16:26:50,463 p=79422 u=michal n=ansible | [WARNING]: No inventory was parsed, only implicit localhost is available
+
+2022-09-29 16:26:50,469 p=79422 u=michal n=ansible | [WARNING]: provided hosts list is empty, only localhost is available. Note that the implicit localhost does not match 'all'
+
+2022-09-29 16:26:50,781 p=79422 u=michal n=ansible | PLAY [delete_template] ***************************************************************************************************************
+2022-09-29 16:26:50,800 p=79422 u=michal n=ansible | TASK [Gathering Facts] ***************************************************************************************************************
+2022-09-29 16:26:51,209 p=79422 u=michal n=ansible | fatal: [localhost]: FAILED! => changed=false 
+  ansible_facts: {}
+  failed_modules:
+    ansible.legacy.setup:
+      failed: true
+      module_stderr: |-
+        sudo: a password is required
+      module_stdout: ''
+      msg: |-
+        MODULE FAILURE
+        See stdout/stderr for the exact error
+      rc: 1
+  msg: |-
+    The following modules failed to execute: ansible.legacy.setup
+2022-09-29 16:26:51,210 p=79422 u=michal n=ansible | PLAY RECAP ***************************************************************************************************************************
+2022-09-29 16:26:51,211 p=79422 u=michal n=ansible | localhost                  : ok=0    changed=0    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0   
+2022-09-29 16:27:58,818 p=79676 u=michal n=ansible | [DEPRECATION WARNING]: ALLOW_WORLD_READABLE_TMPFILES option, moved to a per plugin approach that is more flexible, use mostly the 
+same config will work, but now controlled from the plugin itself and not using the general constant. instead. This feature will be 
+removed from ansible-base in version 2.14. Deprecation warnings can be disabled by setting deprecation_warnings=False in ansible.cfg.
+2022-09-29 16:27:59,052 p=79676 u=michal n=ansible | PLAY [delete_template] ***************************************************************************************************************
+2022-09-29 16:27:59,061 p=79676 u=michal n=ansible | ERROR! Attempting to decrypt but no vault secrets found
+2022-09-29 16:32:57,722 p=80358 u=michal n=ansible | [DEPRECATION WARNING]: ALLOW_WORLD_READABLE_TMPFILES option, moved to a per plugin approach that is more flexible, use mostly the 
+same config will work, but now controlled from the plugin itself and not using the general constant. instead. This feature will be 
+removed from ansible-base in version 2.14. Deprecation warnings can be disabled by setting deprecation_warnings=False in ansible.cfg.
+2022-09-29 16:32:57,937 p=80358 u=michal n=ansible | PLAY [delete_template] ***************************************************************************************************************
+2022-09-29 16:32:57,945 p=80358 u=michal n=ansible | ERROR! Attempting to decrypt but no vault secrets found
+2022-09-29 16:33:37,352 p=80465 u=michal n=ansible | [DEPRECATION WARNING]: ALLOW_WORLD_READABLE_TMPFILES option, moved to a per plugin approach that is more flexible, use mostly the 
+same config will work, but now controlled from the plugin itself and not using the general constant. instead. This feature will be 
+removed from ansible-base in version 2.14. Deprecation warnings can be disabled by setting deprecation_warnings=False in ansible.cfg.
+2022-09-29 16:33:37,354 p=80465 u=michal n=ansible | [WARNING]: Error in vault password file loading (default): Problem running vault password script
+/home/michal/projects/smartnic/playground/ansible ([Errno 13] Permission denied:
+'/home/michal/projects/smartnic/playground/ansible'). If this is not a script, remove the executable bit from the file.
+
+2022-09-29 16:33:37,354 p=80465 u=michal n=ansible | ERROR! Problem running vault password script /home/michal/projects/smartnic/playground/ansible ([Errno 13] Permission denied: '/home/michal/projects/smartnic/playground/ansible'). If this is not a script, remove the executable bit from the file.
+2022-09-29 16:34:25,283 p=80581 u=michal n=ansible | [DEPRECATION WARNING]: ALLOW_WORLD_READABLE_TMPFILES option, moved to a per plugin approach that is more flexible, use mostly the 
+same config will work, but now controlled from the plugin itself and not using the general constant. instead. This feature will be 
+removed from ansible-base in version 2.14. Deprecation warnings can be disabled by setting deprecation_warnings=False in ansible.cfg.
+2022-09-29 16:34:25,284 p=80581 u=michal n=ansible | ERROR! The vault password file /home/michal/projects/smartnic/playground/ansible/PIrYnN86k65rpIAZIUen2y6Zj was not found
+2022-09-29 16:35:48,859 p=80780 u=michal n=ansible | [DEPRECATION WARNING]: ALLOW_WORLD_READABLE_TMPFILES option, moved to a per plugin approach that is more flexible, use mostly the same config will work, but now controlled from the 
+plugin itself and not using the general constant. instead. This feature will be removed from ansible-base in version 2.14. Deprecation warnings can be disabled by setting 
+deprecation_warnings=False in ansible.cfg.
+2022-09-29 16:35:48,860 p=80780 u=michal n=ansible | ERROR! The vault password file /home/michal/projects/smartnic/playground/ansible/PIrYnN86k65rpIAZIUen2y6Zj was not found
+2022-09-29 16:36:20,604 p=80867 u=michal n=ansible | [DEPRECATION WARNING]: ALLOW_WORLD_READABLE_TMPFILES option, moved to a per plugin approach that is more flexible, use mostly the same config will work, but now controlled from the 
+plugin itself and not using the general constant. instead. This feature will be removed from ansible-base in version 2.14. Deprecation warnings can be disabled by setting 
+deprecation_warnings=False in ansible.cfg.
+2022-09-29 16:36:20,605 p=80867 u=michal n=ansible | ERROR! The vault password file /home/michal/projects/smartnic/playground/ansible/PIrYnN86k65rpIAZIUen2y6Zj was not found
+2022-09-29 16:36:36,076 p=80932 u=michal n=ansible | [DEPRECATION WARNING]: ALLOW_WORLD_READABLE_TMPFILES option, moved to a per plugin approach that is more flexible, use mostly the same config will work, but now controlled from the 
+plugin itself and not using the general constant. instead. This feature will be removed from ansible-base in version 2.14. Deprecation warnings can be disabled by setting 
+deprecation_warnings=False in ansible.cfg.
+2022-09-29 16:36:36,077 p=80932 u=michal n=ansible | ERROR! The vault password file /home/michal/projects/smartnic/playground/ansible/PIrYnN86k65rpIAZIUen2y6Zj was not found
+2022-09-29 16:40:48,497 p=81515 u=michal n=ansible | [DEPRECATION WARNING]: ALLOW_WORLD_READABLE_TMPFILES option, moved to a per plugin approach that is more flexible, use mostly the same config will work, but now controlled from the 
+plugin itself and not using the general constant. instead. This feature will be removed from ansible-base in version 2.14. Deprecation warnings can be disabled by setting 
+deprecation_warnings=False in ansible.cfg.
+2022-09-29 16:40:48,497 p=81515 u=michal n=ansible | ERROR! The vault password file /home/michal/projects/smartnic/playground/ansible/PIrYnN86k65rpIAZIUen2y6Zj was not found
+2022-09-29 16:42:15,209 p=81678 u=michal n=ansible | [DEPRECATION WARNING]: ALLOW_WORLD_READABLE_TMPFILES option, moved to a per plugin approach that is more flexible, use mostly the same config will work, but now controlled from the 
+plugin itself and not using the general constant. instead. This feature will be removed from ansible-base in version 2.14. Deprecation warnings can be disabled by setting 
+deprecation_warnings=False in ansible.cfg.
+2022-09-29 16:42:15,210 p=81678 u=michal n=ansible | ERROR! The vault password file /home/michal/projects/smartnic/playground/ansible/PIrYnN86k65rpIAZIUen2y6Zj was not found
+2022-09-29 16:43:00,113 p=81797 u=michal n=ansible | [DEPRECATION WARNING]: ALLOW_WORLD_READABLE_TMPFILES option, moved to a per plugin approach that is more flexible, use mostly the same config will work, but now controlled from the 
+plugin itself and not using the general constant. instead. This feature will be removed from ansible-base in version 2.14. Deprecation warnings can be disabled by setting 
+deprecation_warnings=False in ansible.cfg.
+2022-09-29 16:43:00,113 p=81797 u=michal n=ansible | ERROR! the playbook: playbooks/delete_template.yamlOD could not be found
+2022-09-29 16:43:35,498 p=81935 u=michal n=ansible | [DEPRECATION WARNING]: ALLOW_WORLD_READABLE_TMPFILES option, moved to a per plugin approach that is more flexible, use mostly the same config will work, but now controlled from the 
+plugin itself and not using the general constant. instead. This feature will be removed from ansible-base in version 2.14. Deprecation warnings can be disabled by setting 
+deprecation_warnings=False in ansible.cfg.
+2022-09-29 16:43:35,498 p=81935 u=michal n=ansible | ERROR! the playbook: playbooks/delete_template.yamlOD could not be found
+2022-09-29 16:45:06,349 p=82162 u=michal n=ansible | [DEPRECATION WARNING]: ALLOW_WORLD_READABLE_TMPFILES option, moved to a per plugin approach that is more flexible, use mostly the same config will work, but now controlled from the 
+plugin itself and not using the general constant. instead. This feature will be removed from ansible-base in version 2.14. Deprecation warnings can be disabled by setting 
+deprecation_warnings=False in ansible.cfg.
+2022-09-29 16:45:06,350 p=82162 u=michal n=ansible | ERROR! the playbook: playbooks/delete_template.yamlOD could not be found
+2022-09-29 16:45:32,127 p=82292 u=michal n=ansible | [DEPRECATION WARNING]: ALLOW_WORLD_READABLE_TMPFILES option, moved to a per plugin approach that is more flexible, use mostly the same config will work, but now controlled from the 
+plugin itself and not using the general constant. instead. This feature will be removed from ansible-base in version 2.14. Deprecation warnings can be disabled by setting 
+deprecation_warnings=False in ansible.cfg.
+2022-09-29 16:45:32,127 p=82292 u=michal n=ansible | ERROR! The vault password file /home/michal/projects/smartnic/playground/ansible/envs/group_vars/all/sercrets.yml was not found
+2022-09-29 16:45:58,676 p=82387 u=michal n=ansible | [DEPRECATION WARNING]: ALLOW_WORLD_READABLE_TMPFILES option, moved to a per plugin approach that is more flexible, use mostly the same config will work, but now controlled from the 
+plugin itself and not using the general constant. instead. This feature will be removed from ansible-base in version 2.14. Deprecation warnings can be disabled by setting 
+deprecation_warnings=False in ansible.cfg.
+2022-09-29 16:45:58,677 p=82387 u=michal n=ansible | ERROR! The vault password file /home/michal/projects/smartnic/playground/ansible/group_vars/all/sercrets.yml was not found
+2022-09-29 16:46:14,856 p=82461 u=michal n=ansible | [DEPRECATION WARNING]: ALLOW_WORLD_READABLE_TMPFILES option, moved to a per plugin approach that is more flexible, use mostly the same config will work, but now controlled from the 
+plugin itself and not using the general constant. instead. This feature will be removed from ansible-base in version 2.14. Deprecation warnings can be disabled by setting 
+deprecation_warnings=False in ansible.cfg.
+2022-09-29 16:46:14,857 p=82461 u=michal n=ansible | [WARNING]: Error in vault password file loading (default): A vault password must be specified to decrypt data
+
+2022-09-29 16:46:14,857 p=82461 u=michal n=ansible | ERROR! A vault password must be specified to decrypt data
+2022-09-29 16:48:43,388 p=82915 u=michal n=ansible | [DEPRECATION WARNING]: ALLOW_WORLD_READABLE_TMPFILES option, moved to a per plugin approach that is more flexible, use mostly the same config will work, but now controlled from the 
+plugin itself and not using the general constant. instead. This feature will be removed from ansible-base in version 2.14. Deprecation warnings can be disabled by setting 
+deprecation_warnings=False in ansible.cfg.
+2022-09-29 16:48:43,389 p=82915 u=michal n=ansible | [WARNING]: Error in vault password file loading (default): A vault password must be specified to decrypt data
+
+2022-09-29 16:48:43,389 p=82915 u=michal n=ansible | ERROR! A vault password must be specified to decrypt data
+2022-09-29 16:50:27,403 p=83099 u=michal n=ansible | [DEPRECATION WARNING]: ALLOW_WORLD_READABLE_TMPFILES option, moved to a per plugin approach that is more flexible, use mostly the same config will work, but now controlled from the 
+plugin itself and not using the general constant. instead. This feature will be removed from ansible-base in version 2.14. Deprecation warnings can be disabled by setting 
+deprecation_warnings=False in ansible.cfg.
+2022-09-29 16:50:29,965 p=83099 u=michal n=ansible |  [ERROR]: User interrupted execution
+
+2022-09-29 16:52:06,613 p=83472 u=michal n=ansible | [DEPRECATION WARNING]: ALLOW_WORLD_READABLE_TMPFILES option, moved to a per plugin approach that is more flexible, use mostly the same config will work, but now controlled from the 
+plugin itself and not using the general constant. instead. This feature will be removed from ansible-base in version 2.14. Deprecation warnings can be disabled by setting 
+deprecation_warnings=False in ansible.cfg.
+2022-09-29 16:52:17,423 p=83472 u=michal n=ansible | ERROR! input is already encrypted
+2022-09-29 16:52:25,714 p=83570 u=michal n=ansible | [DEPRECATION WARNING]: ALLOW_WORLD_READABLE_TMPFILES option, moved to a per plugin approach that is more flexible, use mostly the same config will work, but now controlled from the 
+plugin itself and not using the general constant. instead. This feature will be removed from ansible-base in version 2.14. Deprecation warnings can be disabled by setting 
+deprecation_warnings=False in ansible.cfg.
+2022-09-29 16:52:27,243 p=83570 u=michal n=ansible |  [ERROR]: User interrupted execution
+
+2022-09-29 16:52:32,835 p=83623 u=michal n=ansible | [DEPRECATION WARNING]: ALLOW_WORLD_READABLE_TMPFILES option, moved to a per plugin approach that is more flexible, use mostly the same config will work, but now controlled from the 
+plugin itself and not using the general constant. instead. This feature will be removed from ansible-base in version 2.14. Deprecation warnings can be disabled by setting 
+deprecation_warnings=False in ansible.cfg.
+2022-09-29 16:52:48,257 p=83623 u=michal n=ansible |  [ERROR]: User interrupted execution
+
+2022-09-29 16:52:50,242 p=83734 u=michal n=ansible | [DEPRECATION WARNING]: ALLOW_WORLD_READABLE_TMPFILES option, moved to a per plugin approach that is more flexible, use mostly the same config will work, but now controlled from the 
+plugin itself and not using the general constant. instead. This feature will be removed from ansible-base in version 2.14. Deprecation warnings can be disabled by setting 
+deprecation_warnings=False in ansible.cfg.
+2022-09-29 16:52:51,617 p=83734 u=michal n=ansible | Decryption successful
+2022-09-29 16:52:59,228 p=83802 u=michal n=ansible | [DEPRECATION WARNING]: ALLOW_WORLD_READABLE_TMPFILES option, moved to a per plugin approach that is more flexible, use mostly the same config will work, but now controlled from the 
+plugin itself and not using the general constant. instead. This feature will be removed from ansible-base in version 2.14. Deprecation warnings can be disabled by setting 
+deprecation_warnings=False in ansible.cfg.
+2022-09-29 16:52:59,556 p=83802 u=michal n=ansible |  [ERROR]: User interrupted execution
+
+2022-09-29 16:53:01,238 p=83834 u=michal n=ansible | [DEPRECATION WARNING]: ALLOW_WORLD_READABLE_TMPFILES option, moved to a per plugin approach that is more flexible, use mostly the same config will work, but now controlled from the 
+plugin itself and not using the general constant. instead. This feature will be removed from ansible-base in version 2.14. Deprecation warnings can be disabled by setting 
+deprecation_warnings=False in ansible.cfg.
+2022-09-29 16:53:01,244 p=83834 u=michal n=ansible | [WARNING]: No inventory was parsed, only implicit localhost is available
+
+2022-09-29 16:53:01,248 p=83834 u=michal n=ansible | [WARNING]: provided hosts list is empty, only localhost is available. Note that the implicit localhost does not match 'all'
+
+2022-09-29 16:53:01,467 p=83834 u=michal n=ansible | PLAY [delete_template] ******************************************************************************************************************************************************************
+2022-09-29 16:53:01,488 p=83834 u=michal n=ansible | TASK [Gathering Facts] ******************************************************************************************************************************************************************
+2022-09-29 16:53:01,840 p=83834 u=michal n=ansible | fatal: [localhost]: FAILED! => changed=false 
+  ansible_facts: {}
+  failed_modules:
+    ansible.legacy.setup:
+      failed: true
+      module_stderr: |-
+        sudo: a password is required
+      module_stdout: ''
+      msg: |-
+        MODULE FAILURE
+        See stdout/stderr for the exact error
+      rc: 1
+  msg: |-
+    The following modules failed to execute: ansible.legacy.setup
+2022-09-29 16:53:01,841 p=83834 u=michal n=ansible | PLAY RECAP ******************************************************************************************************************************************************************************
+2022-09-29 16:53:01,842 p=83834 u=michal n=ansible | localhost                  : ok=0    changed=0    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0   
+2022-09-29 16:53:51,330 p=83928 u=root n=ansible | [DEPRECATION WARNING]: ALLOW_WORLD_READABLE_TMPFILES option, moved to a per plugin approach that is more flexible, use mostly the same config will work, but now controlled from the 
+plugin itself and not using the general constant. instead. This feature will be removed from ansible-base in version 2.14. Deprecation warnings can be disabled by setting 
+deprecation_warnings=False in ansible.cfg.
+2022-09-29 16:53:51,336 p=83928 u=root n=ansible | [WARNING]: No inventory was parsed, only implicit localhost is available
+
+2022-09-29 16:53:51,340 p=83928 u=root n=ansible | [WARNING]: provided hosts list is empty, only localhost is available. Note that the implicit localhost does not match 'all'
+
+2022-09-29 16:53:51,537 p=83928 u=root n=ansible | PLAY [delete_template] ******************************************************************************************************************************************************************
+2022-09-29 16:53:51,559 p=83928 u=root n=ansible | TASK [Gathering Facts] ******************************************************************************************************************************************************************
+2022-09-29 16:53:53,154 p=83928 u=root n=ansible | ok: [localhost]
+2022-09-29 16:53:53,165 p=83928 u=root n=ansible | TASK [Increment the retry count] ********************************************************************************************************************************************************
+2022-09-29 16:53:53,201 p=83928 u=root n=ansible | ok: [localhost]
+2022-09-29 16:53:53,226 p=83928 u=root n=ansible | TASK [Get ticket] ***********************************************************************************************************************************************************************
+2022-09-29 16:53:53,270 p=83928 u=root n=ansible | fatal: [localhost]: FAILED! => 
+  msg: |-
+    The task includes an option with an undefined variable. The error was: 'proxmox_api_host' is undefined
+  
+    The error appears to be in '/home/michal/projects/smartnic/playground/ansible/playbooks/delete_template.yaml': line 16, column 11, but may
+    be elsewhere in the file depending on the exact syntax problem.
+  
+    The offending line appears to be:
+  
+            # Auth
+            - name: Get ticket
+              ^ here
+2022-09-29 16:53:53,272 p=83928 u=root n=ansible | PLAY RECAP ******************************************************************************************************************************************************************************
+2022-09-29 16:53:53,272 p=83928 u=root n=ansible | localhost                  : ok=2    changed=0    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0   
+2022-09-29 16:54:36,586 p=84246 u=root n=ansible | [DEPRECATION WARNING]: ALLOW_WORLD_READABLE_TMPFILES option, moved to a per plugin approach that is more flexible, use mostly the same config will work, but now controlled from the 
+plugin itself and not using the general constant. instead. This feature will be removed from ansible-base in version 2.14. Deprecation warnings can be disabled by setting 
+deprecation_warnings=False in ansible.cfg.
+2022-09-29 16:54:36,592 p=84246 u=root n=ansible | [WARNING]: No inventory was parsed, only implicit localhost is available
+
+2022-09-29 16:54:36,596 p=84246 u=root n=ansible | [WARNING]: provided hosts list is empty, only localhost is available. Note that the implicit localhost does not match 'all'
+
+2022-09-29 16:54:36,819 p=84246 u=root n=ansible | PLAY [delete_template] ******************************************************************************************************************************************************************
+2022-09-29 16:54:36,830 p=84246 u=root n=ansible | TASK [Gathering Facts] ******************************************************************************************************************************************************************
+2022-09-29 16:54:38,420 p=84246 u=root n=ansible | ok: [localhost]
+2022-09-29 16:54:38,433 p=84246 u=root n=ansible | TASK [Increment the retry count] ********************************************************************************************************************************************************
+2022-09-29 16:54:38,480 p=84246 u=root n=ansible | ok: [localhost]
+2022-09-29 16:54:38,495 p=84246 u=root n=ansible | TASK [Get ticket] ***********************************************************************************************************************************************************************
+2022-09-29 16:54:38,528 p=84246 u=root n=ansible | fatal: [localhost]: FAILED! => 
+  msg: |-
+    The task includes an option with an undefined variable. The error was: 'proxmox_username' is undefined
+  
+    The error appears to be in '/home/michal/projects/smartnic/playground/ansible/playbooks/delete_template.yaml': line 16, column 11, but may
+    be elsewhere in the file depending on the exact syntax problem.
+  
+    The offending line appears to be:
+  
+            # Auth
+            - name: Get ticket
+              ^ here
+2022-09-29 16:54:38,530 p=84246 u=root n=ansible | PLAY RECAP ******************************************************************************************************************************************************************************
+2022-09-29 16:54:38,530 p=84246 u=root n=ansible | localhost                  : ok=2    changed=0    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0   
+2022-09-29 16:54:57,444 p=84450 u=root n=ansible | [DEPRECATION WARNING]: ALLOW_WORLD_READABLE_TMPFILES option, moved to a per plugin approach that is more flexible, use mostly the same config will work, but now controlled from the 
+plugin itself and not using the general constant. instead. This feature will be removed from ansible-base in version 2.14. Deprecation warnings can be disabled by setting 
+deprecation_warnings=False in ansible.cfg.
+2022-09-29 16:54:57,452 p=84450 u=root n=ansible | [WARNING]: No inventory was parsed, only implicit localhost is available
+
+2022-09-29 16:54:57,457 p=84450 u=root n=ansible | [WARNING]: provided hosts list is empty, only localhost is available. Note that the implicit localhost does not match 'all'
+
+2022-09-29 16:54:57,645 p=84450 u=root n=ansible | PLAY [delete_template] ******************************************************************************************************************************************************************
+2022-09-29 16:54:57,657 p=84450 u=root n=ansible | TASK [Gathering Facts] ******************************************************************************************************************************************************************
+2022-09-29 16:54:59,145 p=84450 u=root n=ansible | ok: [localhost]
+2022-09-29 16:54:59,158 p=84450 u=root n=ansible | TASK [Increment the retry count] ********************************************************************************************************************************************************
+2022-09-29 16:54:59,195 p=84450 u=root n=ansible | ok: [localhost]
+2022-09-29 16:54:59,209 p=84450 u=root n=ansible | TASK [Get ticket] ***********************************************************************************************************************************************************************
+2022-09-29 16:54:59,249 p=84450 u=root n=ansible | fatal: [localhost]: FAILED! => 
+  msg: |-
+    The task includes an option with an undefined variable. The error was: 'proxmox_user_password' is undefined
+  
+    The error appears to be in '/home/michal/projects/smartnic/playground/ansible/playbooks/delete_template.yaml': line 16, column 11, but may
+    be elsewhere in the file depending on the exact syntax problem.
+  
+    The offending line appears to be:
+  
+            # Auth
+            - name: Get ticket
+              ^ here
+2022-09-29 16:54:59,251 p=84450 u=root n=ansible | PLAY RECAP ******************************************************************************************************************************************************************************
+2022-09-29 16:54:59,251 p=84450 u=root n=ansible | localhost                  : ok=2    changed=0    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0   
+2022-09-29 16:55:15,905 p=84645 u=root n=ansible | [DEPRECATION WARNING]: ALLOW_WORLD_READABLE_TMPFILES option, moved to a per plugin approach that is more flexible, use mostly the same config will work, but now controlled from the 
+plugin itself and not using the general constant. instead. This feature will be removed from ansible-base in version 2.14. Deprecation warnings can be disabled by setting 
+deprecation_warnings=False in ansible.cfg.
+2022-09-29 16:55:15,911 p=84645 u=root n=ansible | [WARNING]: No inventory was parsed, only implicit localhost is available
+
+2022-09-29 16:55:15,915 p=84645 u=root n=ansible | [WARNING]: provided hosts list is empty, only localhost is available. Note that the implicit localhost does not match 'all'
+
+2022-09-29 16:55:16,103 p=84645 u=root n=ansible | PLAY [delete_template] ******************************************************************************************************************************************************************
+2022-09-29 16:55:16,113 p=84645 u=root n=ansible | TASK [Gathering Facts] ******************************************************************************************************************************************************************
+2022-09-29 16:55:17,660 p=84645 u=root n=ansible | ok: [localhost]
+2022-09-29 16:55:17,672 p=84645 u=root n=ansible | TASK [Increment the retry count] ********************************************************************************************************************************************************
+2022-09-29 16:55:17,725 p=84645 u=root n=ansible | ok: [localhost]
+2022-09-29 16:55:17,741 p=84645 u=root n=ansible | TASK [Get ticket] ***********************************************************************************************************************************************************************
+2022-09-29 16:55:21,317 p=84645 u=root n=ansible | fatal: [localhost]: FAILED! => changed=false 
+  cache_control: max-age=0
+  connection: close
+  content_length: '13'
+  content_type: application/json;charset=UTF-8
+  date: Thu, 29 Sep 2022 14:55:21 GMT
+  elapsed: 3
+  expires: Thu, 29 Sep 2022 14:55:21 GMT
+  json:
+    data: null
+  msg: 'Status code was 401 and not [200]: HTTP Error 401: authentication failure'
+  pragma: no-cache
+  redirected: false
+  server: pve-api-daemon/3.0
+  status: 401
+  url: https://prod-pve01.intra.codilime.com:8006/api2/json/access/ticket
+2022-09-29 16:55:21,320 p=84645 u=root n=ansible | PLAY RECAP ******************************************************************************************************************************************************************************
+2022-09-29 16:55:21,320 p=84645 u=root n=ansible | localhost                  : ok=2    changed=0    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0   
+2022-09-29 16:56:13,580 p=85013 u=root n=ansible | [DEPRECATION WARNING]: ALLOW_WORLD_READABLE_TMPFILES option, moved to a per plugin approach that is more flexible, use mostly the same config will work, but now controlled from the 
+plugin itself and not using the general constant. instead. This feature will be removed from ansible-base in version 2.14. Deprecation warnings can be disabled by setting 
+deprecation_warnings=False in ansible.cfg.
+2022-09-29 16:56:13,587 p=85013 u=root n=ansible | [WARNING]: No inventory was parsed, only implicit localhost is available
+
+2022-09-29 16:56:13,591 p=85013 u=root n=ansible | [WARNING]: provided hosts list is empty, only localhost is available. Note that the implicit localhost does not match 'all'
+
+2022-09-29 16:56:13,780 p=85013 u=root n=ansible | PLAY [delete_template] ******************************************************************************************************************************************************************
+2022-09-29 16:56:13,787 p=85013 u=root n=ansible | TASK [Gathering Facts] ******************************************************************************************************************************************************************
+2022-09-29 16:56:15,364 p=85013 u=root n=ansible | ok: [localhost]
+2022-09-29 16:56:15,377 p=85013 u=root n=ansible | TASK [Increment the retry count] ********************************************************************************************************************************************************
+2022-09-29 16:56:15,437 p=85013 u=root n=ansible | ok: [localhost]
+2022-09-29 16:56:15,452 p=85013 u=root n=ansible | TASK [Get ticket] ***********************************************************************************************************************************************************************
+2022-09-29 16:56:18,950 p=85013 u=root n=ansible | fatal: [localhost]: FAILED! => changed=false 
+  cache_control: max-age=0
+  connection: close
+  content_length: '13'
+  content_type: application/json;charset=UTF-8
+  date: Thu, 29 Sep 2022 14:56:18 GMT
+  elapsed: 3
+  expires: Thu, 29 Sep 2022 14:56:18 GMT
+  json:
+    data: null
+  msg: 'Status code was 401 and not [200]: HTTP Error 401: authentication failure'
+  pragma: no-cache
+  redirected: false
+  server: pve-api-daemon/3.0
+  status: 401
+  url: https://prod-pve01.intra.codilime.com:8006/api2/json/access/ticket
+2022-09-29 16:56:18,952 p=85013 u=root n=ansible | PLAY RECAP ******************************************************************************************************************************************************************************
+2022-09-29 16:56:18,952 p=85013 u=root n=ansible | localhost                  : ok=2    changed=0    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0   
+2022-09-29 16:57:50,618 p=85395 u=root n=ansible | [DEPRECATION WARNING]: ALLOW_WORLD_READABLE_TMPFILES option, moved to a per plugin approach that is more flexible, use mostly the same config will work, but now controlled from the 
+plugin itself and not using the general constant. instead. This feature will be removed from ansible-base in version 2.14. Deprecation warnings can be disabled by setting 
+deprecation_warnings=False in ansible.cfg.
+2022-09-29 16:57:50,625 p=85395 u=root n=ansible | [WARNING]: No inventory was parsed, only implicit localhost is available
+
+2022-09-29 16:57:50,628 p=85395 u=root n=ansible | [WARNING]: provided hosts list is empty, only localhost is available. Note that the implicit localhost does not match 'all'
+
+2022-09-29 16:57:50,813 p=85395 u=root n=ansible | PLAY [delete_template] ******************************************************************************************************************************************************************
+2022-09-29 16:57:50,823 p=85395 u=root n=ansible | TASK [Gathering Facts] ******************************************************************************************************************************************************************
+2022-09-29 16:57:52,318 p=85395 u=root n=ansible | ok: [localhost]
+2022-09-29 16:57:52,330 p=85395 u=root n=ansible | TASK [Increment the retry count] ********************************************************************************************************************************************************
+2022-09-29 16:57:52,386 p=85395 u=root n=ansible | ok: [localhost]
+2022-09-29 16:57:52,403 p=85395 u=root n=ansible | TASK [Get ticket] ***********************************************************************************************************************************************************************
+2022-09-29 16:57:52,926 p=85395 u=root n=ansible | ok: [localhost]
+2022-09-29 16:57:52,938 p=85395 u=root n=ansible | TASK [Start VM] *************************************************************************************************************************************************************************
+2022-09-29 16:57:52,970 p=85395 u=root n=ansible | fatal: [localhost]: FAILED! => 
+  msg: |-
+    The task includes an option with an undefined variable. The error was: 'vm_proxmox_node' is undefined
+  
+    The error appears to be in '/home/michal/projects/smartnic/playground/ansible/playbooks/delete_template.yaml': line 28, column 11, but may
+    be elsewhere in the file depending on the exact syntax problem.
+  
+    The offending line appears to be:
+  
+  
+            - name: Start VM
+              ^ here
+2022-09-29 16:57:52,972 p=85395 u=root n=ansible | PLAY RECAP ******************************************************************************************************************************************************************************
+2022-09-29 16:57:52,972 p=85395 u=root n=ansible | localhost                  : ok=3    changed=0    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0   
+2022-09-29 16:58:18,376 p=85618 u=root n=ansible | [DEPRECATION WARNING]: ALLOW_WORLD_READABLE_TMPFILES option, moved to a per plugin approach that is more flexible, use mostly the same config will work, but now controlled from the 
+plugin itself and not using the general constant. instead. This feature will be removed from ansible-base in version 2.14. Deprecation warnings can be disabled by setting 
+deprecation_warnings=False in ansible.cfg.
+2022-09-29 16:58:18,382 p=85618 u=root n=ansible | [WARNING]: No inventory was parsed, only implicit localhost is available
+
+2022-09-29 16:58:18,386 p=85618 u=root n=ansible | [WARNING]: provided hosts list is empty, only localhost is available. Note that the implicit localhost does not match 'all'
+
+2022-09-29 16:58:18,573 p=85618 u=root n=ansible | PLAY [delete_template] ******************************************************************************************************************************************************************
+2022-09-29 16:58:18,584 p=85618 u=root n=ansible | TASK [Gathering Facts] ******************************************************************************************************************************************************************
+2022-09-29 16:58:20,033 p=85618 u=root n=ansible | ok: [localhost]
+2022-09-29 16:58:20,049 p=85618 u=root n=ansible | TASK [Increment the retry count] ********************************************************************************************************************************************************
+2022-09-29 16:58:20,085 p=85618 u=root n=ansible | ok: [localhost]
+2022-09-29 16:58:20,092 p=85618 u=root n=ansible | TASK [Get ticket] ***********************************************************************************************************************************************************************
+2022-09-29 16:58:20,595 p=85618 u=root n=ansible | ok: [localhost]
+2022-09-29 16:58:20,608 p=85618 u=root n=ansible | TASK [Start VM] *************************************************************************************************************************************************************************
+2022-09-29 16:58:20,668 p=85618 u=root n=ansible | fatal: [localhost]: FAILED! => 
+  msg: |-
+    The task includes an option with an undefined variable. The error was: 'vm_proxmox_node' is undefined
+  
+    The error appears to be in '/home/michal/projects/smartnic/playground/ansible/playbooks/delete_template.yaml': line 27, column 11, but may
+    be elsewhere in the file depending on the exact syntax problem.
+  
+    The offending line appears to be:
+  
+  
+            - name: Start VM
+              ^ here
+2022-09-29 16:58:20,671 p=85618 u=root n=ansible | PLAY RECAP ******************************************************************************************************************************************************************************
+2022-09-29 16:58:20,672 p=85618 u=root n=ansible | localhost                  : ok=3    changed=0    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0   
+2022-09-29 16:58:57,025 p=85853 u=root n=ansible | [DEPRECATION WARNING]: ALLOW_WORLD_READABLE_TMPFILES option, moved to a per plugin approach that is more flexible, use mostly the same config will work, but now controlled from the 
+plugin itself and not using the general constant. instead. This feature will be removed from ansible-base in version 2.14. Deprecation warnings can be disabled by setting 
+deprecation_warnings=False in ansible.cfg.
+2022-09-29 16:58:57,031 p=85853 u=root n=ansible | [WARNING]: No inventory was parsed, only implicit localhost is available
+
+2022-09-29 16:58:57,036 p=85853 u=root n=ansible | [WARNING]: provided hosts list is empty, only localhost is available. Note that the implicit localhost does not match 'all'
+
+2022-09-29 16:58:57,221 p=85853 u=root n=ansible | PLAY [delete_template] ******************************************************************************************************************************************************************
+2022-09-29 16:58:57,229 p=85853 u=root n=ansible | TASK [Gathering Facts] ******************************************************************************************************************************************************************
+2022-09-29 16:58:58,772 p=85853 u=root n=ansible | ok: [localhost]
+2022-09-29 16:58:58,801 p=85853 u=root n=ansible | TASK [Increment the retry count] ********************************************************************************************************************************************************
+2022-09-29 16:58:58,845 p=85853 u=root n=ansible | ok: [localhost]
+2022-09-29 16:58:58,854 p=85853 u=root n=ansible | TASK [Get ticket] ***********************************************************************************************************************************************************************
+2022-09-29 16:58:59,370 p=85853 u=root n=ansible | ok: [localhost]
+2022-09-29 16:58:59,383 p=85853 u=root n=ansible | TASK [Start VM] *************************************************************************************************************************************************************************
+2022-09-29 16:58:59,441 p=85853 u=root n=ansible | fatal: [localhost]: FAILED! => 
+  msg: |-
+    The task includes an option with an undefined variable. The error was: 'vm_vmid' is undefined
+  
+    The error appears to be in '/home/michal/projects/smartnic/playground/ansible/playbooks/delete_template.yaml': line 27, column 11, but may
+    be elsewhere in the file depending on the exact syntax problem.
+  
+    The offending line appears to be:
+  
+  
+            - name: Start VM
+              ^ here
+2022-09-29 16:58:59,442 p=85853 u=root n=ansible | PLAY RECAP ******************************************************************************************************************************************************************************
+2022-09-29 16:58:59,442 p=85853 u=root n=ansible | localhost                  : ok=3    changed=0    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0   
+2022-09-29 16:59:09,860 p=86023 u=root n=ansible | [DEPRECATION WARNING]: ALLOW_WORLD_READABLE_TMPFILES option, moved to a per plugin approach that is more flexible, use mostly the same config will work, but now controlled from the 
+plugin itself and not using the general constant. instead. This feature will be removed from ansible-base in version 2.14. Deprecation warnings can be disabled by setting 
+deprecation_warnings=False in ansible.cfg.
+2022-09-29 16:59:09,865 p=86023 u=root n=ansible | [WARNING]: No inventory was parsed, only implicit localhost is available
+
+2022-09-29 16:59:09,870 p=86023 u=root n=ansible | [WARNING]: provided hosts list is empty, only localhost is available. Note that the implicit localhost does not match 'all'
+
+2022-09-29 16:59:10,140 p=86023 u=root n=ansible | PLAY [delete_template] ******************************************************************************************************************************************************************
+2022-09-29 16:59:10,150 p=86023 u=root n=ansible | TASK [Gathering Facts] ******************************************************************************************************************************************************************
+2022-09-29 16:59:11,709 p=86023 u=root n=ansible | ok: [localhost]
+2022-09-29 16:59:11,720 p=86023 u=root n=ansible | TASK [Increment the retry count] ********************************************************************************************************************************************************
+2022-09-29 16:59:11,753 p=86023 u=root n=ansible | ok: [localhost]
+2022-09-29 16:59:11,763 p=86023 u=root n=ansible | TASK [Get ticket] ***********************************************************************************************************************************************************************
+2022-09-29 16:59:12,350 p=86023 u=root n=ansible | ok: [localhost]
+2022-09-29 16:59:12,365 p=86023 u=root n=ansible | TASK [Start VM] *************************************************************************************************************************************************************************
+2022-09-29 16:59:12,792 p=86023 u=root n=ansible | fatal: [localhost]: FAILED! => changed=false 
+  cache_control: max-age=0
+  connection: close
+  content_length: '13'
+  content_type: application/json;charset=UTF-8
+  date: Thu, 29 Sep 2022 14:59:12 GMT
+  elapsed: 0
+  expires: Thu, 29 Sep 2022 14:59:12 GMT
+  json:
+    data: null
+  msg: 'Status code was 501 and not [200]: HTTP Error 501: Method ''DELETE /nodes/prod-pve01/qemu/704/p4-introduction-template'' not implemented'
+  pragma: no-cache
+  redirected: false
+  server: pve-api-daemon/3.0
+  status: 501
+  url: https://prod-pve01.intra.codilime.com:8006/api2/json/nodes/prod-pve01/qemu/704/p4-introduction-template
+2022-09-29 16:59:12,793 p=86023 u=root n=ansible | PLAY RECAP ******************************************************************************************************************************************************************************
+2022-09-29 16:59:12,794 p=86023 u=root n=ansible | localhost                  : ok=3    changed=0    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0   
+2022-09-29 16:59:27,841 p=86283 u=root n=ansible | [DEPRECATION WARNING]: ALLOW_WORLD_READABLE_TMPFILES option, moved to a per plugin approach that is more flexible, use mostly the same config will work, but now controlled from the 
+plugin itself and not using the general constant. instead. This feature will be removed from ansible-base in version 2.14. Deprecation warnings can be disabled by setting 
+deprecation_warnings=False in ansible.cfg.
+2022-09-29 16:59:27,849 p=86283 u=root n=ansible | [WARNING]: No inventory was parsed, only implicit localhost is available
+
+2022-09-29 16:59:27,853 p=86283 u=root n=ansible | [WARNING]: provided hosts list is empty, only localhost is available. Note that the implicit localhost does not match 'all'
+
+2022-09-29 16:59:28,082 p=86283 u=root n=ansible | PLAY [delete_template] ******************************************************************************************************************************************************************
+2022-09-29 16:59:28,095 p=86283 u=root n=ansible | TASK [Gathering Facts] ******************************************************************************************************************************************************************
+2022-09-29 16:59:29,629 p=86283 u=root n=ansible | ok: [localhost]
+2022-09-29 16:59:29,667 p=86283 u=root n=ansible | TASK [Increment the retry count] ********************************************************************************************************************************************************
+2022-09-29 16:59:29,703 p=86283 u=root n=ansible | ok: [localhost]
+2022-09-29 16:59:29,711 p=86283 u=root n=ansible | TASK [Get ticket] ***********************************************************************************************************************************************************************
+2022-09-29 16:59:30,250 p=86283 u=root n=ansible | ok: [localhost]
+2022-09-29 16:59:30,256 p=86283 u=root n=ansible | TASK [Start VM] *************************************************************************************************************************************************************************
+2022-09-29 16:59:30,724 p=86283 u=root n=ansible | ok: [localhost]
+2022-09-29 16:59:30,755 p=86283 u=root n=ansible | PLAY RECAP ******************************************************************************************************************************************************************************
+2022-09-29 16:59:30,756 p=86283 u=root n=ansible | localhost                  : ok=4    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   

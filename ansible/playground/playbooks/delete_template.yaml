@@ -1,0 +1,11 @@
+# playbook.yml
+- name: delete_template
+  hosts: localhost
+  become: true
+  ignore_errors: yes
+  roles:
+    - proxmox/delete_template
+
+
+
+

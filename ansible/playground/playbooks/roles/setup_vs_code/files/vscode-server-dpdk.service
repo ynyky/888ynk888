@@ -1,0 +1,12 @@
+[Unit]
+Description=code-server
+After=network.target
+
+[Service]
+Type=exec
+Restart=always
+User=%i
+ExecStart=/usr/bin/code-server /home/%i/dpdk-playground/scenarios/
+
+[Install]
+WantedBy=default.target

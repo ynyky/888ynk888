@@ -1,0 +1,16 @@
+# playbook.yml
+- name: base_vm_preparation
+  hosts: default
+  become: true
+  become_user: root
+  roles:
+    - base_vm_preparation
+    - copy_repository
+
+- name: Prepare vs_code
+  hosts: default
+  become: true
+  roles:
+    - setup_vs_code
+  vars:
+    triggerer: "playground_user"

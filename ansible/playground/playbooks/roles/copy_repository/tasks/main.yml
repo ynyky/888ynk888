@@ -1,0 +1,29 @@
+---
+- name: Clone repo "{{ scenario }}
+  git:
+    repo: "https://gitlab-ci-token:{{ gitlab_token }}@cl-gitlab.intra.codilime.com/competency-center/test-subgroup/{{ scenario }}.git"
+    dest: "/tmp/{{ scenario }}"
+    version: master
+
+- name: Change ownership of a directory {{ scenario }}
+  become_user: root
+  ansible.builtin.file:
+    path: /tmp/{{ scenario }}
+    state: directory
+    recurse: yes
+    mode: '0777'
+
+- name: Copy scenarios
+  copy:
+    src: /tmp/{{ scenario }}/scenarios
+    remote_src: yes
+    dest: "/home/playground_user"
+    owner: "playground_user"
+    group: "playground_user"
+    mode: 0755
+
+- name: Grant triggerer docker access
+  user:
+    name: "playground_user"
+    groups: "docker"
+    append: yes

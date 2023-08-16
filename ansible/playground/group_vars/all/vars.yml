@@ -1,0 +1,6 @@
+### Proxmox role
+proxmox_api_host: prod-pve01.intra.codilime.com
+proxmox_username: smartnic_user@pve
+vm_proxmox_node: prod-pve01
+ansible_ssh_user: smartnic_admin
+ansible_ssh_password: "{{ vm_ansible_ssh_password }}"

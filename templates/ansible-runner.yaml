@@ -1,0 +1,27 @@
+ansible-runner:
+  stage: deploy
+  image: $CI_REGISTRY_IMAGE/playground_ansible_runner:$DOCKER_IMAGE_TAG
+
+  variables:
+    ANSIBLE_HOST_KEY_CHECKING: "False"
+    ANSIBLE_PLAYBOOK: ""
+    PLAYBOOK: ""
+    TARGET_ENV: ""
+    PLAYGROUND_SCENARIO: ""
+    SCENARIO: ""
+    CC_USER: ""
+
+  environment:
+    name: "$TARGET_ENV"
+    auto_stop_in: 12 hours
+
+  script:
+    - echo $TARGET_ENV
+    - cd ansible
+    - ANSIBLE_CONFIG=./ansible.cfg
+    - ansible-playbook -v -i "envs/$TARGET_ENV" "playbooks/$PLAYBOOK" --vault-password-file "$ansible_vault_password" -e "triggerer=$CC_USER gitlab_token=$CI_JOB_TOKEN playground_scenario=$SCENARIO" | ts
+
+  artifacts:
+    paths:
+      - ansible.log
+    when: on_failure

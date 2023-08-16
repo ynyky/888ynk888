@@ -1,0 +1,64 @@
+---
+- name: Restore base snapshot for vm
+  hosts: vm
+  ignore_unreachable: true
+  ignore_errors: true
+  gather_facts: no
+  roles:
+    - proxmox/restore_snapshot
+
+- name: base_vm_preparation
+  hosts: vm
+  become: yes
+  become_user: root
+  roles:
+    - base_vm_preparation
+
+- name: Prepare local env
+  hosts: vm
+  become: yes
+  become_user: "playground_user"
+  tasks:
+    - name: run vagrant up
+      git_config:
+        value: --add safe.directory '*'
+        scope: global
+        repo: /home/playground_user
+
+    - name: clone playground repo
+      become_user: root
+      become: yes
+      git:
+        repo: "https://gitlab-ci-token:{{ gitlab_token }}@cl-gitlab.intra.codilime.com/competency-center/dpdk-playground.git"
+        dest: "/home/playground_user/dpdk-playground"
+        version: master
+
+    - name: chmod-chown
+      become_user: root
+      become: yes
+      ansible.builtin.shell: |
+        chmod 770 -R /home/playground_user/dpdk-playground
+        chown playground_user:playground_user -R /home/playground_user/dpdk-playground
+      args:
+        chdir: /home/playground_user/dpdk-playground/scenarios/{{ playground_scenario }}
+
+    - name: run vagrant up gen_box
+      ansible.builtin.shell: |
+        ./scripts/gen-dpdk-box.sh
+        mv dpdk-ubuntu-22.04-x86_64.box dpdk-ubuntu-22.04-x86_64
+      args:
+        chdir: /home/playground_user/dpdk-playground/scenarios/{{ playground_scenario }}
+
+    - name: run vagrant up gen dpdk
+      ansible.builtin.shell: vagrant up gen dpdk
+      args:
+        chdir: /home/playground_user/dpdk-playground/scenarios/{{ playground_scenario }}
+
+- name: Prepare vs_code
+  hosts: vm
+  become: true
+  roles:
+    - setup_vs_code
+  vars:
+    triggerer: "playground_user"
+

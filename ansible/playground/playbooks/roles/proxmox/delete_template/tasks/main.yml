@@ -1,0 +1,30 @@
+---
+- name: Restoration block
+  vars:
+    max_retries: 5
+    retry_delay: 10
+  block:
+    - name: Increment the retry count
+      set_fact:
+        retry_count: "{{ 0 if retry_count is undefined else retry_count | int + 1 }}"
+
+    # Auth
+    - name: Get ticket
+      uri:
+        url: "https://{{ proxmox_api_host }}:8006/api2/json/access/ticket"
+        method: POST
+        body_format: form-urlencoded
+        body:
+          username: "{{ proxmox_username }}"
+          password: "{{ proxmox_user_password }}"
+        validate_certs: no
+      register: auth
+
+    - name: Delete template
+      uri:
+        url: "https://{{ proxmox_api_host }}:8006/api2/json/nodes/{{ vm_proxmox_node }}/qemu/{{ vm_vmid }}"
+        method: DELETE
+        headers:
+          Cookie: "PVEAuthCookie={{ auth.json.data.ticket }}"
+          CSRFPreventionToken: "{{ auth.json.data.CSRFPreventionToken }}"
+        validate_certs: no

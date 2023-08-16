@@ -1,0 +1,30 @@
+---
+- name: Ensure group "somegroup" exists
+  ansible.builtin.group:
+    name: playground_group
+    state: present
+
+- name: create playground_user
+  become: yes
+  user:
+    name: playground_user
+    state: present
+    groups:
+      - docker
+      - libvirt
+      - playground_group
+      - smartnic_admin
+    append: true
+    shell: /bin/bash
+
+- name: give playground_user sudo
+  become: yes
+  lineinfile:
+    path: /etc/sudoers
+    line: "%playground_group ALL=(ALL) NOPASSWD: ALL"
+
+- name: give playground_user sudo
+  become: yes
+  lineinfile:
+    path: /etc/sudoers
+    line: "playground_user  ALL=(ALL) NOPASSWD: ALL"

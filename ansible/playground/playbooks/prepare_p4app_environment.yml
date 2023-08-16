@@ -1,0 +1,101 @@
+---
+- name: Restore base snapshot for vm
+  hosts: vm
+  ignore_unreachable: true
+  ignore_errors: true
+  gather_facts: no
+  roles:
+    - proxmox/restore_snapshot
+
+- name: Clone p4-introduction repo to gitlabrunner
+  hosts: localhost
+  become: true
+  tasks:
+    - name: Installing Rsync on Gitlab runner
+      ansible.builtin.apt:
+        name: rsync
+        state: present
+
+    - name: Clone p4-introduction repo
+      become_user: root
+      become: yes
+      git:
+        repo: "https://gitlab-ci-token:{{ gitlab_token }}@cl-gitlab.intra.codilime.com/competency-center/test-subgroup/p4-introduction.git"
+        dest: "/tmp/p4-introduction"
+        version: master
+
+    - name: Change ownership of a directory p4-introduction
+      become_user: root
+      ansible.builtin.file:
+        path: /tmp/p4-introduction
+        state: directory
+        recurse: yes
+        mode: '0777'
+
+- name: Copy p4-introduction to VM
+  hosts: vm
+  become: true
+  tasks:
+    - name: Installing Rsync on VM
+      ansible.builtin.apt:
+        name: rsync
+        state: present
+
+    - name: Copy p4-introduction
+      copy:
+        src: /tmp/p4-introduction
+        dest: /tmp/p4-introduction
+        mode: '644'
+
+- name: Prepare VM for p4app
+  hosts: vm
+  become: yes
+  tasks:
+    - name: Download p4app
+      get_url:
+        url: https://raw.githubusercontent.com/p4lang/p4app/master/p4app
+        dest: /usr/local/bin/p4app
+        mode: 0755
+
+    - name: Clone p4app repo
+      git:
+        repo: https://github.com/p4lang/p4app.git
+        dest: /usr/local/src/p4app
+        version: 551c0baca87a0d76fdc2cb1c5fb6ee20d5183733
+
+    - name: create playground_user
+      user:
+        name: "{{ triggerer }}"
+        state: present
+        append: true
+        shell: /bin/bash
+
+    - name: Copy scenarios
+      copy:
+        src: /tmp/p4-introduction/p4-introduction/scenarios
+        remote_src: yes
+        dest: "/home/{{ triggerer }}"
+        owner: "{{ triggerer }}"
+        group: "{{ triggerer }}"
+        mode: 0755
+
+    - name: Grant triggerer docker access
+      user:
+        name: "{{ triggerer }}"
+        groups: "docker"
+        append: yes
+
+- name: Prepare VM for p4app
+  hosts: vm
+  become: true
+  tasks:
+    - name: Recursively remove directory
+      ansible.builtin.file:
+        path: /home/playground_user/dpdk-playground
+        state: absent
+
+- name: Prepare VM for p4app
+  hosts: vm
+  become: true
+  roles:
+    - setup_vs_code

@@ -1,0 +1,68 @@
+---
+- name: Create dir for vscode-server
+  file:
+    state: directory
+    path: /opt/vscode-server
+    mode: 0755
+
+- name: Download setup script
+  get_url:
+    url: https://code-server.dev/install.sh
+    dest: /tmp/vscode-installer.sh
+    mode: 0770
+
+- name: Execute the vscode-installer.sh
+  command: /bin/sh /tmp/vscode-installer.sh
+
+- name: Remove the vscode-installer.sh
+  file:
+    path: /tmp/vscode-installer.sh
+    state: absent
+
+- name: Create systemd service for vscode server
+  copy:
+    src: vscode-server.service
+    dest: /usr/lib/systemd/system/code-server@.service
+    mode: 0644
+
+- name: Create systemd service for vscode server
+  copy:
+    src: vscode-server.service
+    dest: /usr/lib/systemd/system/code-server@.service
+    mode: 0644
+    when: playground_scenario == 'prepare_dpdk_environment'
+
+- name: Create dir with config
+  file:
+    state: directory
+    path: /home/{{ triggerer }}/.config/code-server/
+    recurse: yes
+    mode: 0755
+
+- name: Place config file
+  copy:
+    src: config.yaml
+    dest: /home/{{ triggerer }}/.config/code-server/config.yaml
+    mode: 0644
+
+- name: Start vscode-server
+  systemd:
+    daemon_reload: true
+    name: code-server@{{ triggerer }}.service
+    state: started
+    enabled: true
+
+- name: Centos firewall config
+  block:
+    - name: Permit traffic
+      firewalld:
+        zone: public
+        port: 8080/tcp
+        permanent: yes
+        state: enabled
+
+    - name: reload service firewalld
+      systemd:
+        name: firewalld
+        state: reloaded
+  when: ansible_facts['os_family'] == "RedHat"
