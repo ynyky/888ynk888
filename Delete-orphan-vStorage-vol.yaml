@@ -1,0 +1,46 @@
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-deleteme
+  annotations:
+    pv.kubernetes.io/provisioned-by: cloud.ionos.com
+  finalizers:
+    - kubernetes.io/pv-protection
+    - external-attacher/cloud-ionos-com
+spec:
+  capacity:
+    storage: SIZE
+  csi:
+    driver: cloud.ionos.com
+    volumeHandle: >-
+      datacenters/DATACENTER_UUID/volumes/STORAGE_UUID
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Delete
+  storageClassName: ionos-enterprise-hdd
+  volumeMode: Filesystem
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: enterprise.cloud.ionos.com/datacenter-id
+              operator: In
+              values:
+                - DATACENTER_UUID
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mypvc
+  annotations:
+    volume.beta.kubernetes.io/storage-provisioner: cloud.ionos.com
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: SIZE
+  volumeName: pv-deleteme
+  storageClassName: ionos-enterprise-hdd
+  volumeMode: Filesystem
