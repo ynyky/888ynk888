@@ -1,0 +1,22 @@
+#map
+resource "null_resource" "debug_resource" {
+  # This resource has no other purpose than to execute the local-exec provisioner
+  triggers = {
+    map_values = jsonencode(var.dns_records)
+  }
+
+  provisioner "local-exec" {
+    command = "echo The values of example_map are ${jsonencode(var.dns_records.weight)}"
+  }
+}
+#var
+resource "null_resource" "debug_resource" {
+  # This resource has no other purpose than to execute the local-exec provisioner
+  triggers = {
+    variable_value = var.example_variable
+  }
+
+  provisioner "local-exec" {
+    command = "echo The value of example_variable is ${var.example_variable}"
+  }
+}
