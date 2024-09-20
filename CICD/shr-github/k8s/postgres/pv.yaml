@@ -1,0 +1,23 @@
+#setup correct storageclass missing Reatin policy missin don't have time
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: postgres-pv-volume
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/data"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-pv-claim
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi

@@ -1,0 +1,4 @@
+.terraform/
+.terraform.lock.hcl
+devops-challenge
+analog-pilot-422817-r3-8072da3e975e.json

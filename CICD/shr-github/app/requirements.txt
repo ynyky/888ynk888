@@ -1,0 +1,6 @@
+Flask==2.0.2
+Werkzeug==2.2.2
+Django>=3.2,<4.0
+psycopg2-binary>=2.8.6
+python-decouple>=3.0,<4.0
+uWSGI
