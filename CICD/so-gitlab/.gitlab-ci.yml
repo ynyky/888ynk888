@@ -1,0 +1,273 @@
+---
+stages:
+  - terraform-init
+  - terraform-plan
+  - terraform-apply
+  - terraform-destroy
+  - test
+  - build
+  - deploy-staging
+  - test-staging
+  - deploy-prod
+variables:
+  IMAGE_NAME: "softwaremill"
+  TF_VERSION: "1.9.3"
+  AWS_DEFAULT_REGION: "${REGION}"
+  BUCKET_NAME: "${BUCKET_NAME}"
+  DYNAMODB_NAME: "${DYNAMO_DB_NAME}"
+  TF_DIR: "infra/terraform"
+  AWS_ACCESS_KEY_ID: "${AWS_ACCESS_KEY_ID}"
+  AWS_SECRET_ACCESS_KEY: "${AWS_SECRET_ACCESS_KEY}"
+  AWS_REPOSITORY: "${AWS_REPOSITORY}"
+  IMAGE_PATH: "$AWS_REPOSITORY/softwaremill/$IMAGE_NAME"
+
+cache:
+  paths:
+    - .terraform/
+
+build_and_test:
+  stage: test
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - echo "Running tests and building application"
+    - docker build --target builder -t $AWS_REPOSITORY/$IMAGE_NAME:$CI_COMMIT_REF_SLUG .
+  only:
+    - branches
+  artifacts:
+    paths:
+      - /app/app.jar
+
+build_and_push_image:
+  stage: build
+  image: docker:latest
+  services:
+    - docker:dind
+  before_script:
+    - apk add --no-cache aws-cli docker
+
+    - aws --version
+    - export ECR_PASS=$(aws ecr get-login-password --region $AWS_DEFAULT_REGION )
+    - echo $ECR_PASS | docker login --username AWS --password-stdin $AWS_REPOSITORY
+  script:
+    - CURRENT_DATE=$(date +%d-%m-%Y)
+    - echo "Building Docker image..."
+    - docker build --target app -t $AWS_REPOSITORY/$IMAGE_NAME:$CURRENT_DATE-stagging-$CI_COMMIT_SHORT_SHA .
+    - echo "Pushing Docker image..."
+    - docker push $AWS_REPOSITORY/$IMAGE_NAME:$CURRENT_DATE-stagging-$CI_COMMIT_SHORT_SHA
+  only:
+    - main
+
+deploy_to_staging:
+  stage: deploy-staging
+  image: docker:latest
+  services:
+    - docker:dind
+  before_script:
+    - apk add --no-cache aws-cli docker
+    - export STAGING_TAG=${CURRENT_DATE}-stagging-${CI_COMMIT_SHORT_SHA}
+    - export EC2_PUBLIC_IP=$(cat ./STAGING_IP.txt)
+    # - export STAGING_TAG='19-09-2024-stagging-91f5ed21'
+    # - export EC2_PUBLIC_IP='34.250.2.54'
+    - mkdir -p ~/.ssh
+    - echo "$SSH_PRIV" > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - ssh-keyscan $EC2_PUBLIC_IP
+    - export ECR_PASS=$(aws ecr get-login-password --region $AWS_DEFAULT_REGION )
+    
+  script:
+    - CURRENT_DATE=$(date +%d-%m-%Y)
+    - echo "Deploying to staging...$IMAGE_PATH:$STAGING_TAG"
+    - ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no "ubuntu@$EC2_PUBLIC_IP" "echo ${ECR_PASS} | docker login --username AWS --password-stdin ${AWS_REPOSITORY}"
+    - ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no "ubuntu@$EC2_PUBLIC_IP" "docker pull ${AWS_REPOSITORY}/${IMAGE_NAME}:${STAGING_TAG}"
+    - ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no "ubuntu@$EC2_PUBLIC_IP" "docker kill softwaremill-staging-container"  || true
+    - ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no "ubuntu@$EC2_PUBLIC_IP" "docker container prune --force"  || true
+    - ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no "ubuntu@$EC2_PUBLIC_IP" "docker run -d -e SML_ENV=staging -p 8081:8081 --restart always --name softwaremill-staging-container ${AWS_REPOSITORY}/${IMAGE_NAME}:${STAGING_TAG}"
+    
+  only:
+    - main
+  needs: 
+    - build_and_push_image
+    - terraform_apply
+
+test_staging:
+  stage: test-staging
+  image: docker:latest
+  services:
+    - docker:dind
+  before_script:
+    - apk add --no-cache aws-cli docker curl
+    - aws --version
+    - export ECR_PASS=$(aws ecr get-login-password --region $AWS_DEFAULT_REGION )
+    - echo $ECR_PASS | docker login --username AWS --password-stdin $AWS_REPOSITORY
+    - export EC2_PUBLIC_IP=$(cat ./STAGING_IP.txt)
+    # - export EC2_PUBLIC_IP='34.250.2.54'
+    # - export STAGING_TAG='19-09-2024-stagging-91f5ed21'
+    - CURRENT_DATE=$(date +%d-%m-%Y)
+    - export STAGING_TAG=${CURRENT_DATE}-stagging-${CI_COMMIT_SHORT_SHA}
+    - export PRODUCTION_TAG=${CURRENT_DATE}-production-${CI_COMMIT_SHORT_SHA}
+
+  script:
+    - echo "Testing /status endpoint..."
+    - STATUS_CODE=$(curl -s "$EC2_PUBLIC_IP:8081/status")
+    - |
+      if [[ !$CHECK_UPTIME == '{"status": "ok"}' ]]; then
+        echo "Test failed"
+        exit 1
+      else
+        echo "Test passed"
+      fi
+    - echo "Testing /environment endpoint..."
+    - ENVIRONMENT=$(curl -s http://$EC2_PUBLIC_IP:8081/environment)
+    - |
+      if [[ !$CHECK_UPTIME == '{"environment": "staging"}' ]]; then
+        echo "Test failed"
+        exit 1
+      else
+        echo "Test passed"
+      fi
+    - echo "Testing /environment endpoint..."
+    - DOWORK_RESULT=$(curl -s -X POST http://$EC2_PUBLIC_IP:8081/dowork?magicnumber=12)
+    - |
+      if [[ !$DOWORK_RESULT == 'done' ]]; then
+        echo "Test failed"
+        exit 1
+      else
+        echo "Test passed"
+      fi
+      docker pull $AWS_REPOSITORY/$IMAGE_NAME:$STAGING_TAG
+      docker tag $AWS_REPOSITORY/$IMAGE_NAME:$STAGING_TAG $AWS_REPOSITORY/$IMAGE_NAME:$PRODUCTION_TAG
+      docker push $AWS_REPOSITORY/$IMAGE_NAME:$PRODUCTION_TAG
+  only:
+    - main
+  needs:
+    - terraform_apply
+    - deploy_to_staging
+
+deploy_to_production:
+  stage: deploy-prod
+  image: docker:latest
+  services:
+    - docker:dind
+  before_script:
+    - apk add --no-cache aws-cli docker
+    - CURRENT_DATE=$(date +%d-%m-%Y)
+    - export PRODUCTION_TAG=${CURRENT_DATE}-production-${CI_COMMIT_SHORT_SHA}
+    - export EC2_PUBLIC_IP=$(cat ./PRODUCTION_IP.txt)
+    # - export STAGING_TAG='19-09-2024-stagging-06238e22'
+    # - export EC2_PUBLIC_IP='54.74.44.64'
+    - mkdir -p ~/.ssh
+    - echo "$SSH_PRIV" > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - ssh-keyscan $EC2_PUBLIC_IP
+    - export ECR_PASS=$(aws ecr get-login-password --region $AWS_DEFAULT_REGION )
+  script:
+    
+    - echo "Deploying to staging...$IMAGE_PATH:$PRODUCTION_TAG"
+    - ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no "ubuntu@$EC2_PUBLIC_IP" "echo ${ECR_PASS} | docker login --username AWS --password-stdin ${AWS_REPOSITORY}"
+    - ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no "ubuntu@$EC2_PUBLIC_IP" "docker pull ${AWS_REPOSITORY}/${IMAGE_NAME}:${PRODUCTION_TAG}"
+    - ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no "ubuntu@$EC2_PUBLIC_IP" "docker kill softwaremill-production-container"  || true
+    - ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no "ubuntu@$EC2_PUBLIC_IP" "docker container prune --force"  || true
+    - ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no "ubuntu@$EC2_PUBLIC_IP" "docker run -d -e SML_ENV=production -p 8081:8081 --restart always --name softwaremill-production-container ${AWS_REPOSITORY}/${IMAGE_NAME}:${PRODUCTION_TAG}"
+  only:
+    - main
+  needs:
+    - test_staging
+
+terraform_init:
+  stage: terraform-init
+  image:
+    name: hashicorp/terraform:${TF_VERSION}
+    entrypoint: [""]
+  script:
+    - export TF_VAR_bucket_name=$BUCKET_NAME
+    - export TF_VAR_dynamodb_table_name=$DYNAMO_DB_NAME
+    - export AWS_REGION=$AWS_DEFAULT_REGION
+    - export TF_VAR_availability_zone=${AWS_DEFAULT_REGION}a    
+    - echo "Initializing Terraform with S3 backend..."
+    - terraform -chdir=$TF_DIR init -input=false -lock=true
+  artifacts:
+    paths:
+      - $TF_DIR/.terraform
+      - $TF_DIR/.terraform.lock.hcl
+  only:
+    refs:
+      - main
+
+terraform_plan:
+  stage: terraform-plan
+  image: 
+    name: hashicorp/terraform:${TF_VERSION}
+    entrypoint: [""]
+  script:
+    - export TF_VAR_bucket_name=$BUCKET_NAME
+    - export TF_VAR_dynamodb_table_name=$DYNAMO_DB_NAME
+    - export AWS_REGION=$AWS_DEFAULT_REGION
+    - export TF_VAR_availability_zone=${AWS_DEFAULT_REGION}a
+    - echo "Running Terraform plan..."
+    - export TF_VAR_ssh_pub=$SSH_PUB
+    - terraform -chdir=$TF_DIR plan -input=false -out=tfplan -lock=true 
+  dependencies:
+    - terraform_init
+  artifacts:
+    paths:
+      - $TF_DIR/tfplan
+      - $TF_DIR/.terraform
+      - $TF_DIR/.terraform.lock.hcl
+  only:
+    refs:
+      - main
+
+terraform_apply:
+  stage: terraform-apply
+  image: 
+    name: hashicorp/terraform:${TF_VERSION}
+    entrypoint: [""]
+  before_script:
+    - apk add --no-cache jq
+  script:
+    - export TF_VAR_bucket_name=$BUCKET_NAME
+    - export TF_VAR_dynamodb_table_name=$DYNAMO_DB_NAME
+    - export AWS_REGION=$AWS_DEFAULT_REGION
+    - export TF_VAR_availability_zone=${AWS_DEFAULT_REGION}a
+    - echo "Applying Terraform changes..."
+    - export TF_VAR_ssh_pub=$SSH_PUB
+    - terraform -chdir=$TF_DIR apply -input=false -auto-approve tfplan
+    - cd $TF_DIR
+    - echo "$(terraform output -raw staging_ip)" > ../../STAGING_IP.txt
+    - echo "$(terraform output -raw production_ip)" > ../../PRODUCTION_IP.txt
+  dependencies:
+    - terraform_plan
+  environment:
+    name: production
+  needs:
+    - terraform_plan
+  artifacts:
+    paths:
+      - STAGING_IP.txt
+      - PRODUCTION_IP.txt
+  only:
+    refs:
+      - main
+
+
+terraform_destroy:
+  stage: terraform-destroy
+  image: 
+    name: hashicorp/terraform:${TF_VERSION}
+    entrypoint: [""]
+  script:
+    - export TF_VAR_bucket_name=$BUCKET_NAME
+    - export TF_VAR_dynamodb_table_name=$DYNAMO_DB_NAME
+    - export AWS_REGION=$AWS_DEFAULT_REGION
+    - echo "Destroying Terraform-managed infrastructure..."
+    - export TF_VAR_ssh_pub=$SSH_PUB
+    - terraform -chdir=$TF_DIR destroy -input=false -auto-approve
+  environment:
+    name: teardown
+    action: stop
+  when: manual
+  only:
+    refs:
+      - main

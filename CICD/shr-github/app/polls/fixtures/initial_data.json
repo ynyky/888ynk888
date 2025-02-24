@@ -1,0 +1,37 @@
+[
+  {
+    "model": "pollsapp.question",
+    "pk": 1,
+    "fields": {
+      "question": "What is your favorite part at DevOps?",
+      "date": "2022-04-08T15:23:51.504Z"
+    }
+  },
+  {
+    "model": "pollsapp.choice",
+    "pk": 1,
+    "fields": {
+      "choice": "Dev Part",
+      "votes": 0,
+      "question_id": 1
+    }
+  },
+  {
+    "model": "pollsapp.choice",
+    "pk": 2,
+    "fields": {
+      "choice": "Ops Part",
+      "votes": 0,
+      "question_id": 1
+    }
+  },
+  {
+    "model": "pollsapp.choice",
+    "pk": 3,
+    "fields": {
+      "choice": "Both",
+      "votes": 0,
+      "question_id": 1
+    }
+  }
+]

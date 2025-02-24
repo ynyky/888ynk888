@@ -1,0 +1,53 @@
+### Scala template
+*.class
+*.log
+
+# sbt specific
+.cache
+.history
+.lib/
+dist/*
+target/
+lib_managed/
+src_managed/
+project/boot/
+project/plugins/project/
+.bsp/
+
+##
+.terraform
+# Scala-IDE specific
+.scala_dependencies
+.worksheet
+.idea/
+
+
+# Ignore Terraform state files
+*.tfstate
+*.tfstate.*
+
+# Ignore crash logs
+crash.log
+
+# Ignore any core dump files
+*.core
+
+# Ignore Terraform variable files (often containing sensitive information)
+*.tfvars
+*.tfvars.json
+
+# Ignore override files (used for local changes)
+*_override.tf
+*_override.tf.json
+override.tf
+override.tf.json
+
+# Ignore .terraform directory (contains Terraform's working directories and caches)
+.terraform/
+.terraform.lock.hcl
+
+# Ignore backup files created by Terraform
+*~
+
+# Ignore plan output files
+*.plan

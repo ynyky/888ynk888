@@ -1,0 +1,85 @@
+variables:
+  IMAGE_NAME: "softwaremill"
+  REGISTRY: "registry.gitlab.com"
+  IMAGE_PATH: "$REGISTRY/softwaremill/$IMAGE_NAME"
+
+build_and_test:
+  stage: test
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - echo "Running tests and building application"
+    - docker build --target builder -t $IMAGE_PATH:$CI_COMMIT_REF_SLUG .
+  only:
+    - branches
+  artifacts:
+    paths:
+      - /app/app.jar
+
+build_and_push_image:
+  stage: build
+  image: docker:latest
+  services:
+    - docker:dind
+  before_script:
+    - echo "$CI_REGISTRY_PASSWORD" | docker login $CI_REGISTRY -u $CI_REGISTRY_USER --password-stdin
+  script:
+    - CURRENT_DATE=$(date +%d-%m-%Y)
+    - echo "Building Docker image..."
+    - docker build --target app -t $IMAGE_PATH:$CURRENT_DATE-stagging-$CI_COMMIT_SHORT_SHA .
+    - echo "Pushing Docker image..."
+    - docker push $IMAGE_PATH:$CURRENT_DATE-stagging-$CI_COMMIT_SHORT_SHA
+  only:
+    - main
+
+deploy_to_staging:
+  stage: deploy-staging
+  image: docker:latest
+  services:
+    - docker:dind
+  before_script:
+    - echo "$CI_REGISTRY_PASSWORD" | docker login $CI_REGISTRY -u $CI_REGISTRY_USER --password-stdin
+  script:
+    - CURRENT_DATE=$(date +%d-%m-%Y)
+    - echo "Deploying to staging...$IMAGE_PATH:$CURRENT_DATE-stagging-$CI_COMMIT_SHORT_SHA"
+    - docker pull $IMAGE_PATH:$CURRENT_DATE-stagging-$CI_COMMIT_SHORT_SHA
+    - docker tag $IMAGE_PATH:$CURRENT_DATE-stagging-$CI_COMMIT_SHORT_SHA $IMAGE_PATH:$CURRENT_DATE-production-$CI_COMMIT_SHORT_SHA
+    - docker run -d -e SML_ENV="staging" --name softwaremill-staging-container $IMAGE_PATH:$CURRENT_DATE-production-$CI_COMMIT_SHORT_SHA
+  only:
+    - main
+  needs: 
+    - build_and_push_image
+
+test_staging:
+  stage: test-staging
+  image: docker:latest
+  services:
+    - docker:dind
+  before_script:
+    - echo "$CI_REGISTRY_PASSWORD" | docker login $CI_REGISTRY -u $CI_REGISTRY_USER --password-stdin
+  script:
+    - CURRENT_DATE=$(date +%d-%m-%Y)
+    - echo "Running tests on staging environment..."
+    - docker pull $IMAGE_PATH:$CURRENT_DATE-stagging-$CI_COMMIT_SHORT_SHA
+  only:
+    - main  # Run staging tests only on main branch
+  needs:
+    - deploy_to_staging
+
+deploy_to_production:
+  stage: deploy-prod
+  image: docker:latest
+  services:
+    - docker:dind
+  before_script:
+    - echo "$CI_REGISTRY_PASSWORD" | docker login $CI_REGISTRY -u $CI_REGISTRY_USER --password-stdin
+  script:
+    - CURRENT_DATE=$(date +%d-%m-%Y)
+    - echo "Deploying to production..."
+    - docker pull $IMAGE_PATH:$CI_COMMIT_REF_SLUG
+    - docker run -d -e SML_ENV="production" --name softwaremill-production-container $IMAGE_PATH:$CI_COMMIT_REF_SLUG
+  only:
+    - main
+  needs:
+    - test_staging

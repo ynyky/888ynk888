@@ -1,0 +1,44 @@
+terraform_init:
+  stage: terraform-init
+  image: hashicorp/terraform:${TF_VERSION}
+  script:
+    - echo "Initializing Terraform with S3 backend..."
+    - terraform -chdir=$TF_DIR init -input=false
+  artifacts:
+    paths:
+      - $TF_DIR/.terraform
+      - $TF_DIR/.terraform.lock.hcl
+  only:
+    changes:
+      - $TF_DIR/**/*
+
+terraform_plan:
+  stage: terraform-plan
+  image: hashicorp/terraform:${TF_VERSION}
+  script:
+    - echo "Running Terraform plan..."
+    - terraform -chdir=$TF_DIR plan -input=false -out=tfplan
+  dependencies:
+    - terraform_init
+  artifacts:
+    paths:
+      - $TF_DIR/tfplan
+  only:
+    changes:
+      - $TF_DIR/**/*
+
+terraform_apply:
+  stage: terraform-apply
+  image: hashicorp/terraform:${TF_VERSION}
+  script:
+    - echo "Applying Terraform changes..."
+    - terraform -chdir=$TF_DIR apply -input=false -auto-approve tfplan
+  dependencies:
+    - terraform_plan
+  environment:
+    name: production
+  only:
+    refs:
+      - main
+    changes:
+      - $TF_DIR/**/*
