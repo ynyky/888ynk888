@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: my-app
+  template:
+    metadata:
+      labels:
+        app: my-app
+    spec:
+      serviceAccountName: user-a  # Specify the service account here
+      containers:
+      - name: my-container
+        image: my-image:latest
+        ports:
+        - containerPort: 8080
