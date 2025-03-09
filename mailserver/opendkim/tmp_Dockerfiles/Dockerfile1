@@ -1,0 +1,48 @@
+### section: base image ###
+### owner: IT-OPS ###
+FROM debian:bookworm-slim AS ccs-base
+
+RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y \
+      opendkim \
+      joe \
+      yamllint \
+      inetutils-syslogd \
+      gettext-base \
+      vim \
+      opendkim-tools && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN useradd apps && \
+    mkdir -p /home/apps && chown apps:apps /home/apps && \
+    chmod 777 /tmp
+
+ENV WORKDIR /srv
+ENV CODEDIR=/code
+ENV PATH $WORKDIR/bin:$PATH
+
+### section: application specific setup ###
+### owner: DEV ###
+### desc: install all runtime dependencies ###
+FROM ccs-base AS ccs-app-base
+
+
+### section: test setup ###
+### owner: DEV ###
+### desc: install all test dependencies and generate the artifacts
+
+FROM ccs-app-base AS ccs-app-code
+WORKDIR $CODEDIR
+COPY ./ $CODEDIR
+COPY bin/ $WORKDIR/bin
+COPY files/ $WORKDIR/files
+
+### section: production image ###
+### owner: DEV ###
+### desc: take just the needed artefacts and harden the container
+FROM ccs-app-base AS ccs-app
+ENV PATH=$WORKDIR/bin:$PATH
+WORKDIR $WORKDIR
+COPY --from=ccs-app-code $WORKDIR ./
+USER root
+

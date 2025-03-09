@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-opendkim
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dkim
+  template:
+    metadata:
+      labels:
+        app: dkim
+    spec:
+      serviceAccountName: user-a  # Ensure this service account exists
+      containers:
+        - name: server
+          imagePullPolicy: Never  # Ensure the image exists locally
+          image: docker.io/library/opendkim:latest  # Simpler format if it's an official image
+            #command: ["bin/start"]
+          ports:
+            - containerPort: 8891
+

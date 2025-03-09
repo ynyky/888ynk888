@@ -1,0 +1,16 @@
+#!/bin/bash
+set -e
+echo "*.* /dev/stdout" > /etc/rsyslog.conf
+echo "*.* /dev/stdout" > /etc/syslog.conf
+envsubst < "$WORKDIR/files/opendkim.conf.env" | tee > "/etc/opendkim.conf"
+mkdir /etc/opendkim
+echo "0.0.0.0/0" > /etc/opendkim/trusted.hosts
+echo "mail._domainkey.example.com example.com:mail:/etc/opendkim/keys/example.com/mail.private" > /etc/opendkim/key.table
+echo "*@example.com mail._domainkey.example.com" > /etc/opendkim/signing.table
+mkdir -p /etc/opendkim/keys/example.com
+cd /etc/opendkim/keys/example.com
+opendkim-genkey -s mail -d example.com
+chown opendkim:opendkim mail.private
+chmod 600 mail.private
+/sbin/syslogd -n &
+exec /usr/sbin/opendkim -D -f -x /etc/opendkim.conf
