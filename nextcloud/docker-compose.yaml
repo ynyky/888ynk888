@@ -1,0 +1,106 @@
+services:
+
+  caddy:
+    image: lucaslorentz/caddy-docker-proxy:ci-alpine
+    container_name: reverse-proxy
+    ports:
+      - 80:80
+      - 443:443
+    environment:
+      - CADDY_INGRESS_NETWORKS=nextcloud_network
+    networks:
+      - nextcloud_network
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - caddy_data:/data
+    restart: unless-stopped
+
+  web:
+    image: nginx:alpine
+    container_name: nextcloud-web
+    networks:
+      - nextcloud_network
+    links:
+      - nextcloud
+    labels:
+      caddy: nextcloud.tmplinux.com
+      caddy.reverse_proxy: "{{upstreams}}"
+      caddy.header: /*
+      caddy.header.Strict-Transport-Security: '"max-age=15552000;"'
+      caddy.rewrite_0: /.well-known/carddav /remote.php/dav
+      caddy.rewrite_1: /.well-known/caldav /remote.php/dav
+      caddy.rewrite_2: /.well-known/webfinger /index.php/.well-known/webfinger
+      caddy.rewrite_3: /.well-known/nodeinfo /index.php/.well-known/nodeinfo
+    volumes:
+      - nextcloud_data:/var/www/html:z,ro
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    restart: unless-stopped
+
+  db:
+    image: mariadb:lts
+    container_name: mariadb-database
+    command: --transaction-isolation=READ-COMMITTED --log-bin=binlog --binlog-format=ROW
+    networks:
+      - nextcloud_network
+    volumes:
+      - db_data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD
+      - MYSQL_USER
+      - MYSQL_PASSWORD
+      - MYSQL_DATABASE
+    restart: unless-stopped
+
+  redis:
+    image: redis:alpine
+    container_name: redis-dbcache
+    networks:
+      - nextcloud_network
+    restart: unless-stopped
+
+  nextcloud:
+    image: nextcloud:stable-fpm
+    container_name: nextcloud-app
+    networks:
+      - nextcloud_network
+    volumes:
+      - nextcloud_data:/var/www/html:z
+      - ./php-fpm-www.conf:/usr/local/etc/php-fpm.d/www.conf:ro
+    environment:
+      - MYSQL_USER
+      - MYSQL_PASSWORD
+      - MYSQL_DATABASE
+      - MYSQL_HOST
+      - REDIS_HOST
+      - OVERWRITEPROTOCOL
+      - OVERWRITEHOST
+      - TRUSTED_PROXIES
+      - APACHE_DISABLE_REWRITE_IP
+    restart: unless-stopped
+    depends_on:
+      - caddy
+      - db
+      - redis
+
+  cron:
+    image: nextcloud:stable-fpm
+    container_name: nextcloud-cron
+    networks:
+      - nextcloud_network
+    volumes:
+      - nextcloud_data:/var/www/html:z
+    entrypoint: /cron.sh
+    restart: unless-stopped
+    depends_on:
+      - db
+      - redis
+
+networks:
+  nextcloud_network:
+    external: true
+
+volumes:
+  caddy_data: {}
+  db_data: {}
+  nextcloud_data: {}
+  
