@@ -1,0 +1,48 @@
+FROM debian:bullseye-slim
+
+# Define the s6-overlay version
+ENV S6_OVERLAY_VERSION=v2.2.0.3
+
+# Install required packages: curl, rsyslog, opendkim
+RUN apt-get update && \
+    apt-get install -y curl rsyslog gettext-base opendkim && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Download and extract s6-overlay
+RUN curl -L -o /tmp/s6-overlay-amd64.tar.gz \
+    https://github.com/just-containers/s6-overlay/releases/download/${S6_OVERLAY_VERSION}/s6-overlay-amd64.tar.gz && \
+    tar xzf /tmp/s6-overlay-amd64.tar.gz -C / && \
+    rm /tmp/s6-overlay-amd64.tar.gz
+
+# Create directories for the services and custom init scripts
+RUN mkdir -p /etc/services.d/rsyslog /etc/services.d/opendkim /etc/cont-init.d/
+
+# Create the run script for rsyslog service
+RUN echo '#!/bin/bash\nexec rsyslogd -n' > /etc/services.d/rsyslog/run && \
+    chmod +x /etc/services.d/rsyslog/run
+
+# Create the run script for opendkim service
+RUN echo '#!/bin/bash\nexec opendkim -f -x /etc/opendkim.conf' > /etc/services.d/opendkim/run && \
+    chmod +x /etc/services.d/opendkim/run
+
+# Copy the custom initialization script into /etc/cont-init.d/
+WORKDIR /srv
+COPY files/ .
+COPY 00-custom.sh /etc/cont-init.d/
+RUN chmod +x /etc/cont-init.d/00-custom.sh
+ENV OPENDKIM_SOCKET_PORT=8891
+ENV S6_KEEP_ENV=1 \
+    S6_BEHAVIOUR_IF_STAGE2_FAILS=2 \
+    S6_CMD_WAIT_FOR_SERVICES=1 \
+    S6_CMD_WAIT_FOR_SERVICES_MAXTIME=5000
+
+
+COPY rootfs /
+
+RUN chmod +x /etc/s6-overlay/s6-rc.d/*/run \
+             /etc/s6-overlay/s6-rc.d/*/*.sh
+
+# Use s6-overlay's init as the entrypoint
+#CMD ["sleep 1000"]
+ENTRYPOINT ["/init"]
+CMD ["opendkim", "-f"]
