@@ -4,16 +4,17 @@
 
 ## run inside vm console:
 add sudo on beggining if needed 
-* apt update -y 
-* apt upgrade -y
-* apt install -y git
-* git clone <TOKEN>
-* cd 888ynk888/nextcloud
-* chmod u+x requirements.sh
-* ./requirements.sh
-* exit
-* docker compose -f docker-compose.yaml up -d 
-
+```
+apt update -y 
+apt upgrade -y
+apt install -y git
+git clone <TOKEN>
+cd 888ynk888/nextcloud
+chmod u+x requirements.sh
+./requirements.sh
+exit
+docker compose -f docker-compose.yaml up -d 
+```
 ## Post requirements 
 add your vm ip to dns
 ```
