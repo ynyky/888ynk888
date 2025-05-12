@@ -1,0 +1,9 @@
+https://nextcloud.example.com {
+    tls /ssl/fullchain.pem /ssl/privkey.pem
+    reverse_proxy nextcloud-web:80
+    log {
+        output file /var/log/caddy/access.log
+        format json
+    }
+}
+

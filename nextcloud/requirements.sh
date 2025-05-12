@@ -10,9 +10,6 @@ apt install -y docker-ce docker-ce-cli containerd.io
 systemctl enable docker
 systemctl start docker
 usermod -aG docker $USER
+docker network create nextcloud_network
 newgrp docker  # Apply changes without logout
-curl -SL https://github.com/docker/compose/releases/latest/download/docker-compose-linux-$(uname -m) \
--o /usr/local/lib/docker/cli-plugins/docker-compose
-chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
-docker compose version
-docker version
+exit
