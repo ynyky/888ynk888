@@ -1,4 +1,23 @@
 services:
+  onlyoffice:
+    image: onlyoffice/documentserver
+    container_name: onlyoffice
+    restart: always
+    environment:
+      - JWT_SECRET=mysecret
+      - JWT_ENABLED=true
+    volumes:
+      # - ./run-document-server.sh:/app/ds/run-document-server.sh
+      - document_data:/var/www/onlyoffice/Data
+      - document_log:/var/log/onlyoffice
+    networks:
+      - nextcloud_network
+    depends_on:
+      - caddy
+    extra_hosts:
+      - "onlyoffice.example.com:192.168.1.229"
+      - "nextcloud.example.com:192.168.1.229"
+
   caddy:
     image: caddy:latest
     container_name: caddy
@@ -34,7 +53,7 @@ services:
       caddy.rewrite_3: /.well-known/nodeinfo /index.php/.well-known/nodeinfo
     volumes:
       - ./cert:/ssl:ro
-      - nextcloud_data:/var/www/html:z,ro
+      - nextcloud_data:/var/www/html:z
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
     restart: unless-stopped
 
@@ -61,11 +80,12 @@ services:
     restart: unless-stopped
 
   nextcloud:
-    image: nextcloud:30.0.10-fpm
+    image: nextcloud:stable-fpm
     container_name: nextcloud-app
     networks:
       - nextcloud_network
     volumes:
+      #      - ./app-hooks/before-starting:/docker-entrypoint-hooks.d/before-starting
       - nextcloud_data:/var/www/html:z
       - ./php-fpm-www.conf:/usr/local/etc/php-fpm.d/www.conf:ro
     environment:
@@ -83,7 +103,10 @@ services:
       - caddy
       - db
       - redis
-
+      - onlyoffice
+    extra_hosts:
+      - "onlyoffice.example.com:192.168.1.229"
+      - "nextcloud.example.com:192.168.1.229"
   cron:
     image: nextcloud:stable-fpm
     container_name: nextcloud-cron
@@ -106,4 +129,6 @@ volumes:
   caddy_config: {}
   db_data: {}
   nextcloud_data: {}
-  php-fpm-www.conf: {} 
+  php-fpm-www.conf: {}
+  document_data:
+  document_log:

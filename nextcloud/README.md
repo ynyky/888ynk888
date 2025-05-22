@@ -46,3 +46,15 @@ OVERWRITEHOST=nextcloud.example.com
 ```
 docker compose -f docker-compose.yaml up -d 
 ```
+
+
+### HOW TO SETUP 
+1. Don't install init application on start
+2. Install onlyoffice 
+3. run sctip ./init_script.sh
+3. Setup onlyoffice 
+
+host: https://onlyoffice.example.com/
+turn on: don't verify cert
+add secret: "mysecret"
+modify header: from Authorization to AuthorizationJwt
