@@ -24,7 +24,7 @@ services:
     links:
       - nextcloud
     labels:
-      caddy: nextcloud.tmplinux.com
+      caddy: nextcloud.example.com
       caddy.reverse_proxy: "{{upstreams https}}"
       caddy.header: /*
       caddy.header.Strict-Transport-Security: '"max-age=15552000;"'
@@ -61,7 +61,7 @@ services:
     restart: unless-stopped
 
   nextcloud:
-    image: nextcloud:stable-fpm
+    image: nextcloud:30.0.10-fpm
     container_name: nextcloud-app
     networks:
       - nextcloud_network
@@ -106,4 +106,4 @@ volumes:
   caddy_config: {}
   db_data: {}
   nextcloud_data: {}
-  
+  php-fpm-www.conf: {} 
