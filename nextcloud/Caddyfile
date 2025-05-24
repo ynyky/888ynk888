@@ -1,5 +1,5 @@
-nextcloud.example.com {
-    tls /ssl/nextcloud.example.com.crt /ssl/nextcloud.example.com.key
+nextcloud.sputnik.local {
+    tls /ssl/wildcard-sputnik.crt /ssl/wildcard-sputnik.key
     reverse_proxy nextcloud-web:80
     @mjs {
         path *.mjs
@@ -10,8 +10,8 @@ nextcloud.example.com {
         format json
     }
 }
-onlyoffice.example.com {
-    tls /ssl/onlyoffice.example.com.crt /ssl/onlyoffice.example.com.key
+onlyoffice.sputnik.local {
+    tls /ssl/wildcard-sputnik.crt /ssl/wildcard-sputnik.key
     reverse_proxy onlyoffice:80 {
     header_up Authorization {>Authorization}
     header_up Access-Control-Allow-Origin *

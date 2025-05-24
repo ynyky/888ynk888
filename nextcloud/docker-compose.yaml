@@ -5,6 +5,8 @@ services:
     restart: always
     environment:
       - JWT_SECRET=mysecret
+      - JWT_HEADER=AuthorizationJwt
+      - USE_UNAUTHORIZED_STORAGE=true
       - JWT_ENABLED=true
     volumes:
       # - ./run-document-server.sh:/app/ds/run-document-server.sh
@@ -15,8 +17,8 @@ services:
     depends_on:
       - caddy
     extra_hosts:
-      - "onlyoffice.example.com:192.168.1.229"
-      - "nextcloud.example.com:192.168.1.229"
+      - "onlyoffice.sputknik.lcoal:192.168.10.164"
+      - "nextcloud.sputnik.local:192.168.10.164"
 
   caddy:
     image: caddy:latest
@@ -86,6 +88,7 @@ services:
       - nextcloud_network
     volumes:
       #      - ./app-hooks/before-starting:/docker-entrypoint-hooks.d/before-starting
+      #- ./init.sh:/docker-entrypoint-hooks.d/before-starting/init.sh
       - nextcloud_data:/var/www/html:z
       - ./php-fpm-www.conf:/usr/local/etc/php-fpm.d/www.conf:ro
     environment:
@@ -105,8 +108,8 @@ services:
       - redis
       - onlyoffice
     extra_hosts:
-      - "onlyoffice.example.com:192.168.1.229"
-      - "nextcloud.example.com:192.168.1.229"
+      - "onlyoffice.sputnik.local:192.168.10.164"
+      - "nextcloud.sputnik.local:192.168.10.164"
   cron:
     image: nextcloud:stable-fpm
     container_name: nextcloud-cron
