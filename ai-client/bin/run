@@ -2,6 +2,7 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PARENT_DIR="$(dirname "$SCRIPT_DIR")"
 docker run -e ANTHROPIC_API_KEY \
+  --env-file .ai_env \
   -v "$PARENT_DIR/attach:/home/claude/attach" \
   -v "$PARENT_DIR/CLAUDE.md:/home/claude/CLAUDE.md" \
   -it ai-client:latest
