@@ -4,10 +4,12 @@ Simple containerized AI client environment for working with attached repositorie
 
 ---
 
-
 ## Environment variables
 
-Before running the container, create a `.ai_env` file in the project root.
+Before running the container:
+
+1. Create a `.ai_env` file in the project root
+2. Add the required variables, especially `ANTHROPIC_API_KEY`
 
 Example:
 
@@ -16,6 +18,27 @@ ANTHROPIC_API_KEY=your_api_key_here
 ```
 
 This variable is required for the AI client to work correctly.
+
+### Optional: export globally in your shell
+
+If you want to make the key available in your host shell as well, run:
+
+```bash
+export ANTHROPIC_API_KEY=your_api_key_here
+```
+
+To make it persistent across terminal sessions:
+
+Linux
+```bash
+echo 'export ANTHROPIC_API_KEY=your_api_key_here' >> ~/.bashrc
+source ~/.bashrc
+```
+Mac
+```bash
+echo 'export ANTHROPIC_API_KEY=your_api_key_here' >> ~/.zshrc
+source ~/.zshrc
+```
 
 ---
 
@@ -27,7 +50,7 @@ This variable is required for the AI client to work correctly.
 │   ├── build      # build docker image
 │   └── run        # run container
 ├── attach/        # place repositories here
-├── .ai_env           # environment variables
+├── .ai_env        # environment variables
 └── README.md
 ```
 
@@ -37,29 +60,25 @@ This variable is required for the AI client to work correctly.
 
 ### 1. Create `.ai_env`
 
-Create a `.ai_env` file:
-
 ```bash
-echo "ANTHROPIC_API_KEY=your_api_key_here" > .ai_env
+echo "TEST=test" > .ai_env
 ```
 
 ---
 
 ### 2. Build the image
 
-Run:
-
 ```bash
 bin/build
 ```
 
-This builds the Docker image used by the AI client.
+Builds the Docker image used by the AI client.
 
 ---
 
 ### 3. Add repositories
 
-Put any repositories or project folders you want to work with inside:
+Put any repositories or project folders inside:
 
 ```text
 attach/
@@ -80,8 +99,6 @@ These repositories will be available inside the container.
 
 ### 4. Run the container
 
-Start the container with:
-
 ```bash
 bin/run
 ```
@@ -93,7 +110,7 @@ This launches the AI client container with attached repositories and environment
 ## Typical workflow
 
 ```bash
-echo "ANTHROPIC_API_KEY=your_api_key_here" > .ai_env
+echo "TEST=test" > .ai_env
 bin/build
 cp -r ~/my-project attach/
 bin/run
@@ -106,4 +123,4 @@ bin/run
 * Keep `.ai_env` out of Git
 * Add `.ai_env` to `.gitignore`
 * Keep repositories inside `attach/`
-* Do not commit API keys
+* Never commit API keys
